@@ -11,12 +11,12 @@ TESTDIR = tests
 BENCHDIR = benchmark
 
 # Object files
-BASIC_OBJS = $(SRCDIR)/sm4_basic.o $(SRCDIR)/utils.o
-TTABLE_OBJS = $(SRCDIR)/sm4_ttable.o $(SRCDIR)/utils.o
-AESNI_OBJS = $(SRCDIR)/sm4_aesni.o $(SRCDIR)/utils.o
-GFNI_OBJS = $(SRCDIR)/sm4_gfni.o $(SRCDIR)/utils.o
-GCM_OBJS = $(SRCDIR)/sm4_gcm.o $(SRCDIR)/utils.o
-ALL_OBJS = $(SRCDIR)/sm4_basic.o $(SRCDIR)/sm4_ttable.o $(SRCDIR)/sm4_aesni.o $(SRCDIR)/sm4_gfni.o $(SRCDIR)/sm4_gcm.o $(SRCDIR)/utils.o
+BASIC_OBJS = $(SRCDIR)/sm4_basic.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
+TTABLE_OBJS = $(SRCDIR)/sm4_ttable.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
+AESNI_OBJS = $(SRCDIR)/sm4_aesni.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
+GFNI_OBJS = $(SRCDIR)/sm4_gfni.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
+GCM_OBJS = $(SRCDIR)/sm4_gcm.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
+ALL_OBJS = $(SRCDIR)/sm4_basic.o $(SRCDIR)/sm4_ttable.o $(SRCDIR)/sm4_aesni.o $(SRCDIR)/sm4_gfni.o $(SRCDIR)/sm4_gcm.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
 
 # Targets
 .PHONY: all clean test benchmark debug help

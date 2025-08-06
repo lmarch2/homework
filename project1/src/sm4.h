@@ -63,15 +63,35 @@ typedef struct {
     size_t len;              // Length of processed data
 } sm4_gcm_context;
 
+// GCM functions
 int sm4_gcm_setkey(sm4_gcm_context *ctx, const uint8_t *key, unsigned int keysize);
 int sm4_gcm_starts(sm4_gcm_context *ctx, int mode, const uint8_t *iv, size_t iv_len);
 int sm4_gcm_update_ad(sm4_gcm_context *ctx, const uint8_t *add, size_t add_len);
 int sm4_gcm_update(sm4_gcm_context *ctx, const uint8_t *input, uint8_t *output, size_t length);
 int sm4_gcm_finish(sm4_gcm_context *ctx, uint8_t *tag, size_t tag_len);
 
+// Simplified GCM interface
+int sm4_gcm_encrypt(const uint8_t *key, const uint8_t *iv, size_t iv_len,
+                    const uint8_t *aad, size_t aad_len,
+                    const uint8_t *plaintext, size_t pt_len,
+                    uint8_t *ciphertext, uint8_t *tag, size_t tag_len);
+
+int sm4_gcm_decrypt(const uint8_t *key, const uint8_t *iv, size_t iv_len,
+                    const uint8_t *aad, size_t aad_len,
+                    const uint8_t *ciphertext, size_t ct_len,
+                    const uint8_t *tag, size_t tag_len,
+                    uint8_t *plaintext);
+
 // Utility functions
 void sm4_print_block(const char *label, const uint8_t *data, size_t len);
 void sm4_print_hex(const uint8_t *data, size_t len);
+int sm4_memcmp_const_time(const uint8_t *a, const uint8_t *b, size_t len);
+void sm4_memzero(void *ptr, size_t len);
+
+// Random number generation for testing
+void sm4_srand(uint32_t seed);
+uint32_t sm4_rand(void);
+void sm4_rand_bytes(uint8_t *buf, size_t len);
 
 // CPU feature detection
 int sm4_cpu_support_aesni(void);

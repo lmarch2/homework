@@ -28,45 +28,8 @@ void sm4_print_block(const char *label, const uint8_t *data, size_t len) {
     printf("\n");
 }
 
-// CPU feature detection functions
-int sm4_cpu_support_aesni(void) {
-    uint32_t eax, ebx, ecx, edx;
-    
-    // Check CPUID for AES-NI support
-    __asm__ volatile (
-        "cpuid"
-        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-        : "a" (1)
-    );
-    
-    return (ecx & (1 << 25)) != 0;  // AES-NI flag
-}
-
-int sm4_cpu_support_gfni(void) {
-    uint32_t eax, ebx, ecx, edx;
-    
-    // Check CPUID for GFNI support
-    __asm__ volatile (
-        "cpuid"
-        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-        : "a" (7), "c" (0)
-    );
-    
-    return (ecx & (1 << 8)) != 0;  // GFNI flag
-}
-
-int sm4_cpu_support_avx2(void) {
-    uint32_t eax, ebx, ecx, edx;
-    
-    // Check CPUID for AVX2 support
-    __asm__ volatile (
-        "cpuid"
-        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-        : "a" (7), "c" (0)
-    );
-    
-    return (ebx & (1 << 5)) != 0;  // AVX2 flag
-}
+// CPU feature detection functions (declared in sm4.h)
+// Implementations are in specific optimization files to avoid duplicates
 
 // High-resolution timer functions
 static uint64_t get_cpu_cycles(void) {
