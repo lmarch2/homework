@@ -87,15 +87,15 @@ extern "C"
 
     // Optimized GCM interface (faster implementation)
     int sm4_gcm_encrypt_opt(const uint8_t *key, const uint8_t *iv, size_t iv_len,
-                           const uint8_t *aad, size_t aad_len,
-                           const uint8_t *plaintext, size_t pt_len,
-                           uint8_t *ciphertext, uint8_t *tag, size_t tag_len);
+                            const uint8_t *aad, size_t aad_len,
+                            const uint8_t *plaintext, size_t pt_len,
+                            uint8_t *ciphertext, uint8_t *tag, size_t tag_len);
 
     int sm4_gcm_decrypt_opt(const uint8_t *key, const uint8_t *iv, size_t iv_len,
-                           const uint8_t *aad, size_t aad_len,
-                           const uint8_t *ciphertext, size_t ct_len,
-                           const uint8_t *tag, size_t tag_len,
-                           uint8_t *plaintext);
+                            const uint8_t *aad, size_t aad_len,
+                            const uint8_t *ciphertext, size_t ct_len,
+                            const uint8_t *tag, size_t tag_len,
+                            uint8_t *plaintext);
 
     // Utility functions
     void sm4_print_block(const char *label, const uint8_t *data, size_t len);

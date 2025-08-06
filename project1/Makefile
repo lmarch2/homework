@@ -171,6 +171,18 @@ test-gcm-comparison: $(BINDIR)/test_gcm_comparison
 	@echo "Testing SM4-GCM performance comparison..."
 	$(BINDIR)/test_gcm_comparison
 
+# GCM T-table optimized test
+test-gcm-ttable: $(BINDIR)/test_gcm_ttable
+	@echo "Testing SM4-GCM T-table optimized performance..."
+	$(BINDIR)/test_gcm_ttable
+
+$(BINDIR)/test_gcm_ttable: $(SRCDIR)/sm4_basic_native.o $(SRCDIR)/sm4_gcm_native.o $(SRCDIR)/sm4_ttable_native.o $(TESTDIR)/test_gcm_ttable_native.o
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS_NATIVE) -o $@ $^ $(LDFLAGS)
+
+$(TESTDIR)/test_gcm_ttable_native.o: $(TESTDIR)/test_gcm_ttable.c
+	$(CC) $(CFLAGS_NATIVE) -c -o $@ $<
+
 $(BINDIR)/test_gcm_comparison: $(SRCDIR)/sm4_basic_native.o $(SRCDIR)/sm4_gcm_native.o $(SRCDIR)/sm4_gcm_optimized_native.o $(TESTDIR)/test_gcm_comparison_native.o
 	@mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS_NATIVE) -o $@ $^ $(LDFLAGS)
@@ -207,5 +219,6 @@ help:
 	@echo "  test-comprehensive  - Run comprehensive test suite (including GCM)"
 	@echo "  test-gcm-perf       - Test SM4-GCM performance"
 	@echo "  test-gcm-comparison - Compare basic vs optimized GCM performance"
+	@echo "  test-gcm-ttable     - Test T-table optimized GCM performance"
 	@echo "  quick-test          - Quick correctness test"
 	@echo "  clean               - Clean build files"
