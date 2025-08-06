@@ -211,6 +211,32 @@ class RobustnessAttacks:
         return result
     
     @staticmethod
+    def horizontal_flip(image: np.ndarray) -> np.ndarray:
+        """
+        水平翻转（镜像）
+        
+        Args:
+            image: 输入图像
+            
+        Returns:
+            水平翻转后的图像
+        """
+        return cv2.flip(image, 1)
+    
+    @staticmethod
+    def vertical_flip(image: np.ndarray) -> np.ndarray:
+        """
+        垂直翻转（上下翻转）
+        
+        Args:
+            image: 输入图像
+            
+        Returns:
+            垂直翻转后的图像
+        """
+        return cv2.flip(image, 0)
+    
+    @staticmethod
     def brightness_adjustment(image: np.ndarray, brightness: int = 30) -> np.ndarray:
         """
         亮度调整
@@ -464,6 +490,8 @@ class RobustnessTestSuite:
             'crop_light': lambda img, p: self.attacks.cropping(img, **p),
             'crop_medium': lambda img, p: self.attacks.cropping(img, **p),
             'crop_heavy': lambda img, p: self.attacks.cropping(img, **p),
+            'horizontal_flip': lambda img, p: self.attacks.horizontal_flip(img),
+            'vertical_flip': lambda img, p: self.attacks.vertical_flip(img),
             'brightness_increase': lambda img, p: self.attacks.brightness_adjustment(img, **p),
             'brightness_decrease': lambda img, p: self.attacks.brightness_adjustment(img, **p),
             'contrast_increase': lambda img, p: self.attacks.contrast_adjustment(img, **p),

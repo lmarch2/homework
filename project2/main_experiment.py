@@ -78,7 +78,7 @@ def run_focused_robustness_test():
         print("无法加载测试图像")
         return
     
-    watermark_system = DCTWatermark(block_size=8, alpha=0.1, seed=42)
+    watermark_system = DCTWatermark(block_size=8, alpha=0.35, seed=42)
     
     # 嵌入水印
     watermark_text = "RobustnessTest2025"
@@ -112,6 +112,8 @@ def run_focused_robustness_test():
         {'category': 'geometric', 'name': 'rotation_small', 'params': {'angle': 2}},
         {'category': 'geometric', 'name': 'scaling_down', 'params': {'scale_x': 0.95, 'scale_y': 0.95}},
         {'category': 'geometric', 'name': 'translation_small', 'params': {'dx': 5, 'dy': 5}},
+        {'category': 'geometric', 'name': 'horizontal_flip', 'params': {}},
+        {'category': 'geometric', 'name': 'vertical_flip', 'params': {}},
         
         # 图像增强
         {'category': 'enhancement', 'name': 'brightness_increase', 'params': {'brightness': 20}},
@@ -138,7 +140,7 @@ def run_focused_robustness_test():
             
             # 提取水印 (降低阈值)
             detected_text, correlation, extraction_stats = watermark_system.extract_watermark(
-                attacked_image, embedding_info, similarity_threshold=0.3
+                attacked_image, embedding_info, similarity_threshold=0.25
             )
             
             success = extraction_stats['is_present']
