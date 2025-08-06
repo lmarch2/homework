@@ -1,0 +1,41 @@
+{
+  "watermark_text": "CommandLineTest",
+  "alpha": 0.1,
+  "seed": 42,
+  "block_size": 8,
+  "original_shape": [
+    256,
+    256,
+    3
+  ],
+  "blocks_shape": [
+    32,
+    32
+  ],
+  "positions": [
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      3,
+      1
+    ]
+  ]
+}

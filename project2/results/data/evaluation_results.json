@@ -1,0 +1,1636 @@
+{
+  "evaluation_summary": {
+    "timestamp": "2025-08-06 21:44:46",
+    "total_images": 2,
+    "watermark_texts": [
+      "QuickDemo2025"
+    ],
+    "algorithm_params": {
+      "block_size": 8,
+      "alpha": 0.1,
+      "seed": 42
+    }
+  },
+  "image_results": {
+    "demo_attacked_scaling_down.png": {
+      "image_info": {
+        "name": "demo_attacked_scaling_down.png",
+        "shape": [
+          512,
+          512,
+          3
+        ],
+        "size_mb": 0.75
+      },
+      "watermark_tests": {
+        "QuickDemo2025": {
+          "watermark_text": "QuickDemo2025",
+          "embedding_time": 0.08782768249511719,
+          "invisibility_metrics": {
+            "PSNR": 38.52038016976952,
+            "SSIM": 0.9992303992643384,
+            "MSE": 9.142023722330729,
+            "Local_SSIM": 0.9992303992643384,
+            "Visual_Distortion": "2.1117783"
+          },
+          "baseline_extraction": {
+            "detected_text": "QuickDemo2025",
+            "correlation": 0.9960956145953456,
+            "extraction_stats": {
+              "correlation": 0.9960956145953456,
+              "threshold": 0.6,
+              "is_present": "True",
+              "total_blocks": 4096,
+              "mean_response": -0.02099609375,
+              "std_response": 0.9674575414987454,
+              "detection_rate": 0.998046875
+            }
+          },
+          "robustness_results": {
+            "noise_attacks": [
+              {
+                "attack_name": "gaussian_noise_light",
+                "attack_params": {
+                  "std": 5
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9921847427677685,
+                "is_present": "True",
+                "detection_rate": 0.99609375,
+                "extraction_time": 0.03320813179016113,
+                "mean_response": 0.013183593750000005,
+                "std_response": 0.9031855632182321
+              },
+              {
+                "attack_name": "gaussian_noise_medium",
+                "attack_params": {
+                  "std": 10
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9370622710839607,
+                "is_present": "True",
+                "detection_rate": 0.968505859375,
+                "extraction_time": 0.03358101844787598,
+                "mean_response": 0.018798828125,
+                "std_response": 0.7774206918947596
+              },
+              {
+                "attack_name": "gaussian_noise_heavy",
+                "attack_params": {
+                  "std": 20
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.7506700401370084,
+                "is_present": "True",
+                "detection_rate": 0.873291015625,
+                "extraction_time": 0.033350467681884766,
+                "mean_response": 0.0087890625,
+                "std_response": 0.5991881883175435
+              },
+              {
+                "attack_name": "salt_pepper_light",
+                "attack_params": {
+                  "salt_prob": 0.005,
+                  "pepper_prob": 0.005
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.8330595072970579,
+                "is_present": "True",
+                "detection_rate": 0.915771484375,
+                "extraction_time": 0.033675193786621094,
+                "mean_response": -0.0020345052083333326,
+                "std_response": 0.8205538238302507
+              },
+              {
+                "attack_name": "salt_pepper_medium",
+                "attack_params": {
+                  "salt_prob": 0.01,
+                  "pepper_prob": 0.01
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.7147878371423565,
+                "is_present": "True",
+                "detection_rate": 0.85546875,
+                "extraction_time": 0.03381705284118652,
+                "mean_response": 0.002197265625,
+                "std_response": 0.7152470121176443
+              },
+              {
+                "attack_name": "salt_pepper_heavy",
+                "attack_params": {
+                  "salt_prob": 0.02,
+                  "pepper_prob": 0.02
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.562710263445554,
+                "is_present": "False",
+                "detection_rate": 0.7783203125,
+                "extraction_time": 0.03330588340759277,
+                "mean_response": 0.010660807291666666,
+                "std_response": 0.5792455896169324
+              }
+            ],
+            "compression_attacks": [
+              {
+                "attack_name": "jpeg_high_quality",
+                "attack_params": {
+                  "quality": 80
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9951216581947457,
+                "is_present": "True",
+                "detection_rate": 0.99755859375,
+                "extraction_time": 0.03334760665893555,
+                "mean_response": -0.010416666666666663,
+                "std_response": 0.9342536385324444
+              },
+              {
+                "attack_name": "jpeg_medium_quality",
+                "attack_params": {
+                  "quality": 50
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.8703429267140617,
+                "is_present": "True",
+                "detection_rate": 0.9345703125,
+                "extraction_time": 0.033620595932006836,
+                "mean_response": -0.06526692708333334,
+                "std_response": 0.7507043815689879
+              },
+              {
+                "attack_name": "jpeg_low_quality",
+                "attack_params": {
+                  "quality": 20
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.043500695873458256,
+                "is_present": "False",
+                "detection_rate": 0.519287109375,
+                "extraction_time": 0.03347635269165039,
+                "mean_response": -0.7831217447916667,
+                "std_response": 0.41670111672717886
+              },
+              {
+                "attack_name": "jpeg_very_low_quality",
+                "attack_params": {
+                  "quality": 10
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.03405717373910357,
+                "is_present": "False",
+                "detection_rate": 0.505615234375,
+                "extraction_time": 0.03365635871887207,
+                "mean_response": -0.9165852864583334,
+                "std_response": 0.2969435116422454
+              }
+            ],
+            "geometric_attacks": [
+              {
+                "attack_name": "rotation_small",
+                "attack_params": {
+                  "angle": 1
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.011624801308504346,
+                "is_present": "False",
+                "detection_rate": 0.50927734375,
+                "extraction_time": 0.033652544021606445,
+                "mean_response": 0.0011393229166666641,
+                "std_response": 0.40329965492858255
+              },
+              {
+                "attack_name": "rotation_medium",
+                "attack_params": {
+                  "angle": 5
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.009056507650759502,
+                "is_present": "False",
+                "detection_rate": 0.5,
+                "extraction_time": 0.03383135795593262,
+                "mean_response": -0.0341796875,
+                "std_response": 0.4447847626363941
+              },
+              {
+                "attack_name": "rotation_large",
+                "attack_params": {
+                  "angle": 10
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.03571383165387093,
+                "is_present": "False",
+                "detection_rate": 0.487060546875,
+                "extraction_time": 0.03352522850036621,
+                "mean_response": -0.052815755208333336,
+                "std_response": 0.4716969783712327
+              },
+              {
+                "attack_name": "scaling_up",
+                "attack_params": {
+                  "scale_x": 1.1,
+                  "scale_y": 1.1
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.02765459272622201,
+                "is_present": "False",
+                "detection_rate": 0.49072265625,
+                "extraction_time": 0.033873558044433594,
+                "mean_response": -0.014322916666666664,
+                "std_response": 0.43082826789716433
+              },
+              {
+                "attack_name": "scaling_down",
+                "attack_params": {
+                  "scale_x": 0.9,
+                  "scale_y": 0.9
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.009254220715380299,
+                "is_present": "False",
+                "detection_rate": 0.50927734375,
+                "extraction_time": 0.0334475040435791,
+                "mean_response": -0.17740885416666669,
+                "std_response": 0.547290172112608
+              },
+              {
+                "attack_name": "scaling_non_uniform",
+                "attack_params": {
+                  "scale_x": 1.1,
+                  "scale_y": 0.9
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.01717598730463567,
+                "is_present": "False",
+                "detection_rate": 0.51220703125,
+                "extraction_time": 0.033390045166015625,
+                "mean_response": -0.08260091145833333,
+                "std_response": 0.5014486453667429
+              },
+              {
+                "attack_name": "translation_small",
+                "attack_params": {
+                  "dx": 5,
+                  "dy": 5
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.1783157951551724,
+                "is_present": "False",
+                "detection_rate": 0.420654296875,
+                "extraction_time": 0.03383350372314453,
+                "mean_response": 0.013671875,
+                "std_response": 0.3733728215360113
+              },
+              {
+                "attack_name": "translation_medium",
+                "attack_params": {
+                  "dx": 10,
+                  "dy": 10
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.00282025714812639,
+                "is_present": "False",
+                "detection_rate": 0.5009765625,
+                "extraction_time": 0.03332066535949707,
+                "mean_response": -0.012613932291666668,
+                "std_response": 0.4772702088479941
+              },
+              {
+                "attack_name": "translation_large",
+                "attack_params": {
+                  "dx": 20,
+                  "dy": 20
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.003294597676061967,
+                "is_present": "False",
+                "detection_rate": 0.507080078125,
+                "extraction_time": 0.033495187759399414,
+                "mean_response": -0.07747395833333333,
+                "std_response": 0.42173783698083817
+              },
+              {
+                "attack_name": "crop_light",
+                "attack_params": {
+                  "crop_ratio": 0.05
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.8402342706002146,
+                "is_present": "True",
+                "detection_rate": 0.914306640625,
+                "extraction_time": 0.03341317176818848,
+                "mean_response": -0.18961588541666669,
+                "std_response": 0.9450303033929583
+              },
+              {
+                "attack_name": "crop_medium",
+                "attack_params": {
+                  "crop_ratio": 0.1
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.6968680514320437,
+                "is_present": "True",
+                "detection_rate": 0.828857421875,
+                "extraction_time": 0.03360414505004883,
+                "mean_response": -0.35872395833333337,
+                "std_response": 0.9015117146868726
+              },
+              {
+                "attack_name": "crop_heavy",
+                "attack_params": {
+                  "crop_ratio": 0.15
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5898898891325508,
+                "is_present": "False",
+                "detection_rate": 0.760986328125,
+                "extraction_time": 0.03341269493103027,
+                "mean_response": -0.497802734375,
+                "std_response": 0.8384902614530183
+              }
+            ],
+            "enhancement_attacks": [
+              {
+                "attack_name": "brightness_increase",
+                "attack_params": {
+                  "brightness": 20
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9960956145953456,
+                "is_present": "True",
+                "detection_rate": 0.998046875,
+                "extraction_time": 0.0341336727142334,
+                "mean_response": -0.022379557291666664,
+                "std_response": 0.9672162038186282
+              },
+              {
+                "attack_name": "brightness_decrease",
+                "attack_params": {
+                  "brightness": -20
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.8388116283123641,
+                "is_present": "True",
+                "detection_rate": 0.91357421875,
+                "extraction_time": 0.03348803520202637,
+                "mean_response": -0.188720703125,
+                "std_response": 0.9414279701326687
+              },
+              {
+                "attack_name": "contrast_increase",
+                "attack_params": {
+                  "contrast": 1.3
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9956085239282241,
+                "is_present": "True",
+                "detection_rate": 0.997802734375,
+                "extraction_time": 0.03351140022277832,
+                "mean_response": -0.021565755208333336,
+                "std_response": 0.9658313901013323
+              },
+              {
+                "attack_name": "contrast_decrease",
+                "attack_params": {
+                  "contrast": 0.7
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9960956145953456,
+                "is_present": "True",
+                "detection_rate": 0.998046875,
+                "extraction_time": 0.03338766098022461,
+                "mean_response": -0.021565755208333336,
+                "std_response": 0.9664490935863931
+              },
+              {
+                "attack_name": "gamma_bright",
+                "attack_params": {
+                  "gamma": 1.2
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9960956145953456,
+                "is_present": "True",
+                "detection_rate": 0.998046875,
+                "extraction_time": 0.034062862396240234,
+                "mean_response": -0.018391927083333336,
+                "std_response": 0.9639713325995317
+              },
+              {
+                "attack_name": "gamma_dark",
+                "attack_params": {
+                  "gamma": 0.8
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9946350170645354,
+                "is_present": "True",
+                "detection_rate": 0.997314453125,
+                "extraction_time": 0.03478813171386719,
+                "mean_response": -0.023518880208333336,
+                "std_response": 0.9690664963904819
+              }
+            ],
+            "filtering_attacks": [
+              {
+                "attack_name": "gaussian_blur_light",
+                "attack_params": {
+                  "kernel_size": 3,
+                  "sigma": 0.5
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9951216581947457,
+                "is_present": "True",
+                "detection_rate": 0.99755859375,
+                "extraction_time": 0.034751176834106445,
+                "mean_response": -0.018473307291666664,
+                "std_response": 0.9492381424878684
+              },
+              {
+                "attack_name": "gaussian_blur_medium",
+                "attack_params": {
+                  "kernel_size": 5,
+                  "sigma": 1.0
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9829810504382177,
+                "is_present": "True",
+                "detection_rate": 0.991455078125,
+                "extraction_time": 0.03494524955749512,
+                "mean_response": -0.009358723958333332,
+                "std_response": 0.844549698833503
+              },
+              {
+                "attack_name": "gaussian_blur_heavy",
+                "attack_params": {
+                  "kernel_size": 7,
+                  "sigma": 1.5
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.8993895134533062,
+                "is_present": "True",
+                "detection_rate": 0.948486328125,
+                "extraction_time": 0.03285670280456543,
+                "mean_response": 0.026448567708333336,
+                "std_response": 0.670788297661838
+              },
+              {
+                "attack_name": "median_filter_light",
+                "attack_params": {
+                  "kernel_size": 3
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9796081834583342,
+                "is_present": "True",
+                "detection_rate": 0.98974609375,
+                "extraction_time": 0.03410220146179199,
+                "mean_response": -0.00496419270833333,
+                "std_response": 0.8217636231160792
+              },
+              {
+                "attack_name": "median_filter_medium",
+                "attack_params": {
+                  "kernel_size": 5
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5985131700429451,
+                "is_present": "False",
+                "detection_rate": 0.78759765625,
+                "extraction_time": 0.035104990005493164,
+                "mean_response": -0.0498046875,
+                "std_response": 0.49664014894838276
+              },
+              {
+                "attack_name": "median_filter_heavy",
+                "attack_params": {
+                  "kernel_size": 7
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.0034170922488436684,
+                "is_present": "False",
+                "detection_rate": 0.505859375,
+                "extraction_time": 0.03358650207519531,
+                "mean_response": -0.027587890625,
+                "std_response": 0.4238618055048874
+              }
+            ],
+            "combined_attacks": [
+              {
+                "attack_name": "print_scan_150dpi",
+                "attack_params": {
+                  "dpi": 150
+                },
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9761386448882222,
+                "is_present": "True",
+                "detection_rate": 0.988037109375,
+                "extraction_time": 0.03419327735900879,
+                "mean_response": 0.009602864583333334,
+                "std_response": 0.8192594197184123
+              },
+              {
+                "attack_name": "print_scan_100dpi",
+                "attack_params": {
+                  "dpi": 100
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5949897048722429,
+                "is_present": "False",
+                "detection_rate": 0.7919921875,
+                "extraction_time": 0.03361392021179199,
+                "mean_response": 0.005452473958333333,
+                "std_response": 0.5007563737736704
+              },
+              {
+                "attack_name": "histogram_equalization",
+                "attack_params": {},
+                "detected_text": "QuickDemo2025",
+                "correlation": 0.9951258230036727,
+                "is_present": "True",
+                "detection_rate": 0.99755859375,
+                "extraction_time": 0.03472256660461426,
+                "mean_response": -0.021484375,
+                "std_response": 0.9606372946688241
+              }
+            ]
+          }
+        }
+      }
+    },
+    "demo_watermarked.png": {
+      "image_info": {
+        "name": "demo_watermarked.png",
+        "shape": [
+          512,
+          512,
+          3
+        ],
+        "size_mb": 0.75
+      },
+      "watermark_tests": {
+        "QuickDemo2025": {
+          "watermark_text": "QuickDemo2025",
+          "embedding_time": 0.08571100234985352,
+          "invisibility_metrics": {
+            "PSNR": 38.04454819567767,
+            "SSIM": 0.9987759051320637,
+            "MSE": 10.20059585571289,
+            "Local_SSIM": 0.9987759051320637,
+            "Visual_Distortion": "2.366927"
+          },
+          "baseline_extraction": {
+            "detected_text": "未检测到水印",
+            "correlation": 0.5935737769041354,
+            "extraction_stats": {
+              "correlation": 0.5935737769041354,
+              "threshold": 0.6,
+              "is_present": "False",
+              "total_blocks": 4096,
+              "mean_response": -0.08577473958333331,
+              "std_response": 0.8081275959961536,
+              "detection_rate": 0.789794921875
+            }
+          },
+          "robustness_results": {
+            "noise_attacks": [
+              {
+                "attack_name": "gaussian_noise_light",
+                "attack_params": {
+                  "std": 5
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5256286882224585,
+                "is_present": "False",
+                "detection_rate": 0.761474609375,
+                "extraction_time": 0.033577680587768555,
+                "mean_response": 0.00016276041666666435,
+                "std_response": 0.76734145433231
+              },
+              {
+                "attack_name": "gaussian_noise_medium",
+                "attack_params": {
+                  "std": 10
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5135267817330307,
+                "is_present": "False",
+                "detection_rate": 0.75537109375,
+                "extraction_time": 0.03397798538208008,
+                "mean_response": 0.00146484375,
+                "std_response": 0.7639032670796808
+              },
+              {
+                "attack_name": "gaussian_noise_heavy",
+                "attack_params": {
+                  "std": 20
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5087533665698474,
+                "is_present": "False",
+                "detection_rate": 0.7529296875,
+                "extraction_time": 0.03337669372558594,
+                "mean_response": 0.00016276041666666522,
+                "std_response": 0.6952685891143413
+              },
+              {
+                "attack_name": "salt_pepper_light",
+                "attack_params": {
+                  "salt_prob": 0.005,
+                  "pepper_prob": 0.005
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5436873769083257,
+                "is_present": "False",
+                "detection_rate": 0.767822265625,
+                "extraction_time": 0.03561258316040039,
+                "mean_response": -0.04532877604166666,
+                "std_response": 0.7304166298108438
+              },
+              {
+                "attack_name": "salt_pepper_medium",
+                "attack_params": {
+                  "salt_prob": 0.01,
+                  "pepper_prob": 0.01
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.486737747684778,
+                "is_present": "False",
+                "detection_rate": 0.74072265625,
+                "extraction_time": 0.03307771682739258,
+                "mean_response": -0.021240234375000003,
+                "std_response": 0.6719430056120216
+              },
+              {
+                "attack_name": "salt_pepper_heavy",
+                "attack_params": {
+                  "salt_prob": 0.02,
+                  "pepper_prob": 0.02
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.4366207413494731,
+                "is_present": "False",
+                "detection_rate": 0.716064453125,
+                "extraction_time": 0.032976388931274414,
+                "mean_response": 0.003417968750000001,
+                "std_response": 0.5859680393878735
+              }
+            ],
+            "compression_attacks": [
+              {
+                "attack_name": "jpeg_high_quality",
+                "attack_params": {
+                  "quality": 80
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5327540939190931,
+                "is_present": "False",
+                "detection_rate": 0.756591796875,
+                "extraction_time": 0.03361964225769043,
+                "mean_response": -0.2827962239583333,
+                "std_response": 0.8438279504442948
+              },
+              {
+                "attack_name": "jpeg_medium_quality",
+                "attack_params": {
+                  "quality": 50
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5933530490651954,
+                "is_present": "False",
+                "detection_rate": 0.76318359375,
+                "extraction_time": 0.03366541862487793,
+                "mean_response": -0.496337890625,
+                "std_response": 0.8676449559067817
+              },
+              {
+                "attack_name": "jpeg_low_quality",
+                "attack_params": {
+                  "quality": 20
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5216491917434776,
+                "is_present": "False",
+                "detection_rate": 0.72314453125,
+                "extraction_time": 0.03330588340759277,
+                "mean_response": -0.5069986979166667,
+                "std_response": 0.7775641234934505
+              },
+              {
+                "attack_name": "jpeg_very_low_quality",
+                "attack_params": {
+                  "quality": 10
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.0010370988443426043,
+                "is_present": "False",
+                "detection_rate": 0.51171875,
+                "extraction_time": 0.033334970474243164,
+                "mean_response": -0.9964192708333333,
+                "std_response": 0.0670090782885381
+              }
+            ],
+            "geometric_attacks": [
+              {
+                "attack_name": "rotation_small",
+                "attack_params": {
+                  "angle": 1
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.006501378926169159,
+                "is_present": "False",
+                "detection_rate": 0.5009765625,
+                "extraction_time": 0.03355288505554199,
+                "mean_response": -0.007812499999999999,
+                "std_response": 0.426630539954101
+              },
+              {
+                "attack_name": "rotation_medium",
+                "attack_params": {
+                  "angle": 5
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.011254075730094999,
+                "is_present": "False",
+                "detection_rate": 0.498779296875,
+                "extraction_time": 0.03337812423706055,
+                "mean_response": -0.03304036458333333,
+                "std_response": 0.4599213975747261
+              },
+              {
+                "attack_name": "rotation_large",
+                "attack_params": {
+                  "angle": 10
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.0014153349806516656,
+                "is_present": "False",
+                "detection_rate": 0.5048828125,
+                "extraction_time": 0.03552389144897461,
+                "mean_response": -0.05672200520833332,
+                "std_response": 0.4920812354176348
+              },
+              {
+                "attack_name": "scaling_up",
+                "attack_params": {
+                  "scale_x": 1.1,
+                  "scale_y": 1.1
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.007344674763136083,
+                "is_present": "False",
+                "detection_rate": 0.500244140625,
+                "extraction_time": 0.03654909133911133,
+                "mean_response": -0.0005696614583333333,
+                "std_response": 0.43746862601758285
+              },
+              {
+                "attack_name": "scaling_down",
+                "attack_params": {
+                  "scale_x": 0.9,
+                  "scale_y": 0.9
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.01968264408407885,
+                "is_present": "False",
+                "detection_rate": 0.513916015625,
+                "extraction_time": 0.03548693656921387,
+                "mean_response": -0.17594401041666669,
+                "std_response": 0.5609263082206569
+              },
+              {
+                "attack_name": "scaling_non_uniform",
+                "attack_params": {
+                  "scale_x": 1.1,
+                  "scale_y": 0.9
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.003387717437098094,
+                "is_present": "False",
+                "detection_rate": 0.502685546875,
+                "extraction_time": 0.03440070152282715,
+                "mean_response": -0.08064778645833331,
+                "std_response": 0.514788729747925
+              },
+              {
+                "attack_name": "translation_small",
+                "attack_params": {
+                  "dx": 5,
+                  "dy": 5
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.045184548907924955,
+                "is_present": "False",
+                "detection_rate": 0.488037109375,
+                "extraction_time": 0.03399062156677246,
+                "mean_response": -0.005533854166666667,
+                "std_response": 0.2534950513153963
+              },
+              {
+                "attack_name": "translation_medium",
+                "attack_params": {
+                  "dx": 10,
+                  "dy": 10
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.0192183349825703,
+                "is_present": "False",
+                "detection_rate": 0.510498046875,
+                "extraction_time": 0.03353142738342285,
+                "mean_response": -0.030680338541666664,
+                "std_response": 0.5621695725359939
+              },
+              {
+                "attack_name": "translation_large",
+                "attack_params": {
+                  "dx": 20,
+                  "dy": 20
+                },
+                "detected_text": "未检测到水印",
+                "correlation": -0.0018417127145637327,
+                "is_present": "False",
+                "detection_rate": 0.5048828125,
+                "extraction_time": 0.033234596252441406,
+                "mean_response": -0.07161458333333333,
+                "std_response": 0.43944685566515673
+              },
+              {
+                "attack_name": "crop_light",
+                "attack_params": {
+                  "crop_ratio": 0.05
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.4569863605691309,
+                "is_present": "False",
+                "detection_rate": 0.713623046875,
+                "extraction_time": 0.03404951095581055,
+                "mean_response": -0.2548828125,
+                "std_response": 0.7916858737690241
+              },
+              {
+                "attack_name": "crop_medium",
+                "attack_params": {
+                  "crop_ratio": 0.1
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.38077505869447176,
+                "is_present": "False",
+                "detection_rate": 0.66748046875,
+                "extraction_time": 0.034427642822265625,
+                "mean_response": -0.40673828125,
+                "std_response": 0.7627206500483911
+              },
+              {
+                "attack_name": "crop_heavy",
+                "attack_params": {
+                  "crop_ratio": 0.15
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.32806083705758093,
+                "is_present": "False",
+                "detection_rate": 0.6337890625,
+                "extraction_time": 0.033194780349731445,
+                "mean_response": -0.539794921875,
+                "std_response": 0.7117644543657109
+              }
+            ],
+            "enhancement_attacks": [
+              {
+                "attack_name": "brightness_increase",
+                "attack_params": {
+                  "brightness": 20
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5802260332458217,
+                "is_present": "False",
+                "detection_rate": 0.78369140625,
+                "extraction_time": 0.03376436233520508,
+                "mean_response": -0.07535807291666666,
+                "std_response": 0.8039523555615427
+              },
+              {
+                "attack_name": "brightness_decrease",
+                "attack_params": {
+                  "brightness": -20
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.540745543448278,
+                "is_present": "False",
+                "detection_rate": 0.762451171875,
+                "extraction_time": 0.033555030822753906,
+                "mean_response": -0.10188802083333333,
+                "std_response": 0.790282997809856
+              },
+              {
+                "attack_name": "contrast_increase",
+                "attack_params": {
+                  "contrast": 1.3
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5669973760406574,
+                "is_present": "False",
+                "detection_rate": 0.78173828125,
+                "extraction_time": 0.03353738784790039,
+                "mean_response": -0.015787760416666664,
+                "std_response": 0.7933235731780034
+              },
+              {
+                "attack_name": "contrast_decrease",
+                "attack_params": {
+                  "contrast": 0.7
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5663059703737126,
+                "is_present": "False",
+                "detection_rate": 0.78173828125,
+                "extraction_time": 0.03310132026672363,
+                "mean_response": -0.0037434895833333348,
+                "std_response": 0.7843598417089821
+              },
+              {
+                "attack_name": "gamma_bright",
+                "attack_params": {
+                  "gamma": 1.2
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.556719721774343,
+                "is_present": "False",
+                "detection_rate": 0.7763671875,
+                "extraction_time": 0.03349137306213379,
+                "mean_response": -0.017903645833333336,
+                "std_response": 0.784441114580089
+              },
+              {
+                "attack_name": "gamma_dark",
+                "attack_params": {
+                  "gamma": 0.8
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5690815470179416,
+                "is_present": "False",
+                "detection_rate": 0.78173828125,
+                "extraction_time": 0.03284931182861328,
+                "mean_response": -0.02815755208333333,
+                "std_response": 0.7956105924135716
+              }
+            ],
+            "filtering_attacks": [
+              {
+                "attack_name": "gaussian_blur_light",
+                "attack_params": {
+                  "kernel_size": 3,
+                  "sigma": 0.5
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5369747612395827,
+                "is_present": "False",
+                "detection_rate": 0.7666015625,
+                "extraction_time": 0.0327601432800293,
+                "mean_response": -0.006347656250000002,
+                "std_response": 0.7688338836143118
+              },
+              {
+                "attack_name": "gaussian_blur_medium",
+                "attack_params": {
+                  "kernel_size": 5,
+                  "sigma": 1.0
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5288660839725957,
+                "is_present": "False",
+                "detection_rate": 0.761962890625,
+                "extraction_time": 0.03345656394958496,
+                "mean_response": 0.000732421875,
+                "std_response": 0.761824115301832
+              },
+              {
+                "attack_name": "gaussian_blur_heavy",
+                "attack_params": {
+                  "kernel_size": 7,
+                  "sigma": 1.5
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5150475002659036,
+                "is_present": "False",
+                "detection_rate": 0.7529296875,
+                "extraction_time": 0.03361964225769043,
+                "mean_response": -0.004231770833333334,
+                "std_response": 0.7013546355122371
+              },
+              {
+                "attack_name": "median_filter_light",
+                "attack_params": {
+                  "kernel_size": 3
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5415971213956018,
+                "is_present": "False",
+                "detection_rate": 0.76904296875,
+                "extraction_time": 0.03467416763305664,
+                "mean_response": -0.020182291666666664,
+                "std_response": 0.7211423119820798
+              },
+              {
+                "attack_name": "median_filter_medium",
+                "attack_params": {
+                  "kernel_size": 5
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5092191250180038,
+                "is_present": "False",
+                "detection_rate": 0.751220703125,
+                "extraction_time": 0.034065961837768555,
+                "mean_response": -0.011800130208333334,
+                "std_response": 0.508656268648485
+              },
+              {
+                "attack_name": "median_filter_heavy",
+                "attack_params": {
+                  "kernel_size": 7
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.11085625255667125,
+                "is_present": "False",
+                "detection_rate": 0.555908203125,
+                "extraction_time": 0.032935380935668945,
+                "mean_response": 0.0029296875,
+                "std_response": 0.3629309128287475
+              }
+            ],
+            "combined_attacks": [
+              {
+                "attack_name": "print_scan_150dpi",
+                "attack_params": {
+                  "dpi": 150
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.5161060669622582,
+                "is_present": "False",
+                "detection_rate": 0.75634765625,
+                "extraction_time": 0.033051252365112305,
+                "mean_response": -0.0002441406250000052,
+                "std_response": 0.7558904570793896
+              },
+              {
+                "attack_name": "print_scan_100dpi",
+                "attack_params": {
+                  "dpi": 100
+                },
+                "detected_text": "未检测到水印",
+                "correlation": 0.4217646749534734,
+                "is_present": "False",
+                "detection_rate": 0.70654296875,
+                "extraction_time": 0.03393220901489258,
+                "mean_response": -0.003987630208333336,
+                "std_response": 0.4978364055114328
+              },
+              {
+                "attack_name": "histogram_equalization",
+                "attack_params": {},
+                "detected_text": "未检测到水印",
+                "correlation": 0.5298672265617621,
+                "is_present": "False",
+                "detection_rate": 0.760986328125,
+                "extraction_time": 0.033533573150634766,
+                "mean_response": -0.05802408854166666,
+                "std_response": 0.7873526660740464
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "global_statistics": {
+    "invisibility_statistics": {
+      "PSNR": {
+        "mean": 38.282464182723594,
+        "std": 0.23791598704592332,
+        "min": 38.04454819567767,
+        "max": 38.52038016976952
+      },
+      "SSIM": {
+        "mean": 0.999003152198201,
+        "std": 0.00022724706613735934,
+        "min": 0.9987759051320637,
+        "max": 0.9992303992643384
+      }
+    },
+    "robustness_statistics": {
+      "gaussian_noise_light": {
+        "correlation": {
+          "mean": 0.7589067154951135,
+          "std": 0.233278027272655,
+          "min": 0.5256286882224585,
+          "max": 0.9921847427677685
+        },
+        "detection_rate": {
+          "mean": 0.8787841796875,
+          "std": 0.1173095703125
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "gaussian_noise_medium": {
+        "correlation": {
+          "mean": 0.7252945264084957,
+          "std": 0.211767744675465,
+          "min": 0.5135267817330307,
+          "max": 0.9370622710839607
+        },
+        "detection_rate": {
+          "mean": 0.8619384765625,
+          "std": 0.1065673828125
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "gaussian_noise_heavy": {
+        "correlation": {
+          "mean": 0.6297117033534279,
+          "std": 0.12095833678358053,
+          "min": 0.5087533665698474,
+          "max": 0.7506700401370084
+        },
+        "detection_rate": {
+          "mean": 0.8131103515625,
+          "std": 0.0601806640625
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "salt_pepper_light": {
+        "correlation": {
+          "mean": 0.6883734421026918,
+          "std": 0.1446860651943661,
+          "min": 0.5436873769083257,
+          "max": 0.8330595072970579
+        },
+        "detection_rate": {
+          "mean": 0.841796875,
+          "std": 0.073974609375
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "salt_pepper_medium": {
+        "correlation": {
+          "mean": 0.6007627924135672,
+          "std": 0.11402504472878924,
+          "min": 0.486737747684778,
+          "max": 0.7147878371423565
+        },
+        "detection_rate": {
+          "mean": 0.798095703125,
+          "std": 0.057373046875
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "salt_pepper_heavy": {
+        "correlation": {
+          "mean": 0.4996655023975135,
+          "std": 0.06304476104804044,
+          "min": 0.4366207413494731,
+          "max": 0.562710263445554
+        },
+        "detection_rate": {
+          "mean": 0.7471923828125,
+          "std": 0.0311279296875
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "jpeg_high_quality": {
+        "correlation": {
+          "mean": 0.7639378760569194,
+          "std": 0.2311837821378263,
+          "min": 0.5327540939190931,
+          "max": 0.9951216581947457
+        },
+        "detection_rate": {
+          "mean": 0.8770751953125,
+          "std": 0.1204833984375
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "jpeg_medium_quality": {
+        "correlation": {
+          "mean": 0.7318479878896285,
+          "std": 0.13849493882443314,
+          "min": 0.5933530490651954,
+          "max": 0.8703429267140617
+        },
+        "detection_rate": {
+          "mean": 0.848876953125,
+          "std": 0.085693359375
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "jpeg_low_quality": {
+        "correlation": {
+          "mean": 0.2825749438084679,
+          "std": 0.23907424793500967,
+          "min": 0.043500695873458256,
+          "max": 0.5216491917434776
+        },
+        "detection_rate": {
+          "mean": 0.6212158203125,
+          "std": 0.1019287109375
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "jpeg_very_low_quality": {
+        "correlation": {
+          "mean": -0.016510037447380485,
+          "std": 0.017547136291723088,
+          "min": -0.03405717373910357,
+          "max": 0.0010370988443426043
+        },
+        "detection_rate": {
+          "mean": 0.5086669921875,
+          "std": 0.0030517578125
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "rotation_small": {
+        "correlation": {
+          "mean": 0.0025617111911675934,
+          "std": 0.009063090117336753,
+          "min": -0.006501378926169159,
+          "max": 0.011624801308504346
+        },
+        "detection_rate": {
+          "mean": 0.505126953125,
+          "std": 0.004150390625
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "rotation_medium": {
+        "correlation": {
+          "mean": -0.01015529169042725,
+          "std": 0.0010987840396677485,
+          "min": -0.011254075730094999,
+          "max": -0.009056507650759502
+        },
+        "detection_rate": {
+          "mean": 0.4993896484375,
+          "std": 0.0006103515625
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "rotation_large": {
+        "correlation": {
+          "mean": -0.01714924833660963,
+          "std": 0.0185645833172613,
+          "min": -0.03571383165387093,
+          "max": 0.0014153349806516656
+        },
+        "detection_rate": {
+          "mean": 0.4959716796875,
+          "std": 0.0089111328125
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "scaling_up": {
+        "correlation": {
+          "mean": -0.017499633744679045,
+          "std": 0.010154958981542962,
+          "min": -0.02765459272622201,
+          "max": -0.007344674763136083
+        },
+        "detection_rate": {
+          "mean": 0.4954833984375,
+          "std": 0.0047607421875
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "scaling_down": {
+        "correlation": {
+          "mean": 0.014468432399729576,
+          "std": 0.005214211684349276,
+          "min": 0.009254220715380299,
+          "max": 0.01968264408407885
+        },
+        "detection_rate": {
+          "mean": 0.5115966796875,
+          "std": 0.0023193359375
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "scaling_non_uniform": {
+        "correlation": {
+          "mean": 0.0068941349337687885,
+          "std": 0.010281852370866883,
+          "min": -0.003387717437098094,
+          "max": 0.01717598730463567
+        },
+        "detection_rate": {
+          "mean": 0.5074462890625,
+          "std": 0.0047607421875
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "translation_small": {
+        "correlation": {
+          "mean": -0.11175017203154868,
+          "std": 0.06656562312362373,
+          "min": -0.1783157951551724,
+          "max": -0.045184548907924955
+        },
+        "detection_rate": {
+          "mean": 0.454345703125,
+          "std": 0.03369140625
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "translation_medium": {
+        "correlation": {
+          "mean": 0.008199038917221955,
+          "std": 0.011019296065348346,
+          "min": -0.00282025714812639,
+          "max": 0.0192183349825703
+        },
+        "detection_rate": {
+          "mean": 0.5057373046875,
+          "std": 0.0047607421875
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "translation_large": {
+        "correlation": {
+          "mean": 0.0007264424807491172,
+          "std": 0.00256815519531285,
+          "min": -0.0018417127145637327,
+          "max": 0.003294597676061967
+        },
+        "detection_rate": {
+          "mean": 0.5059814453125,
+          "std": 0.0010986328125
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "crop_light": {
+        "correlation": {
+          "mean": 0.6486103155846727,
+          "std": 0.19162395501554186,
+          "min": 0.4569863605691309,
+          "max": 0.8402342706002146
+        },
+        "detection_rate": {
+          "mean": 0.81396484375,
+          "std": 0.100341796875
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "crop_medium": {
+        "correlation": {
+          "mean": 0.5388215550632577,
+          "std": 0.15804649636878595,
+          "min": 0.38077505869447176,
+          "max": 0.6968680514320437
+        },
+        "detection_rate": {
+          "mean": 0.7481689453125,
+          "std": 0.0806884765625
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "crop_heavy": {
+        "correlation": {
+          "mean": 0.45897536309506587,
+          "std": 0.13091452603748494,
+          "min": 0.32806083705758093,
+          "max": 0.5898898891325508
+        },
+        "detection_rate": {
+          "mean": 0.6973876953125,
+          "std": 0.0635986328125
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "brightness_increase": {
+        "correlation": {
+          "mean": 0.7881608239205836,
+          "std": 0.20793479067476195,
+          "min": 0.5802260332458217,
+          "max": 0.9960956145953456
+        },
+        "detection_rate": {
+          "mean": 0.890869140625,
+          "std": 0.107177734375
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "brightness_decrease": {
+        "correlation": {
+          "mean": 0.689778585880321,
+          "std": 0.14903304243204307,
+          "min": 0.540745543448278,
+          "max": 0.8388116283123641
+        },
+        "detection_rate": {
+          "mean": 0.8380126953125,
+          "std": 0.0755615234375
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "contrast_increase": {
+        "correlation": {
+          "mean": 0.7813029499844407,
+          "std": 0.21430557394378336,
+          "min": 0.5669973760406574,
+          "max": 0.9956085239282241
+        },
+        "detection_rate": {
+          "mean": 0.8897705078125,
+          "std": 0.1080322265625
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "contrast_decrease": {
+        "correlation": {
+          "mean": 0.781200792484529,
+          "std": 0.2148948221108165,
+          "min": 0.5663059703737126,
+          "max": 0.9960956145953456
+        },
+        "detection_rate": {
+          "mean": 0.889892578125,
+          "std": 0.108154296875
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "gamma_bright": {
+        "correlation": {
+          "mean": 0.7764076681848443,
+          "std": 0.21968794641050127,
+          "min": 0.556719721774343,
+          "max": 0.9960956145953456
+        },
+        "detection_rate": {
+          "mean": 0.88720703125,
+          "std": 0.11083984375
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "gamma_dark": {
+        "correlation": {
+          "mean": 0.7818582820412385,
+          "std": 0.21277673502329691,
+          "min": 0.5690815470179416,
+          "max": 0.9946350170645354
+        },
+        "detection_rate": {
+          "mean": 0.8895263671875,
+          "std": 0.1077880859375
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "gaussian_blur_light": {
+        "correlation": {
+          "mean": 0.7660482097171641,
+          "std": 0.22907344847758154,
+          "min": 0.5369747612395827,
+          "max": 0.9951216581947457
+        },
+        "detection_rate": {
+          "mean": 0.882080078125,
+          "std": 0.115478515625
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "gaussian_blur_medium": {
+        "correlation": {
+          "mean": 0.7559235672054068,
+          "std": 0.227057483232811,
+          "min": 0.5288660839725957,
+          "max": 0.9829810504382177
+        },
+        "detection_rate": {
+          "mean": 0.876708984375,
+          "std": 0.11474609375
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "gaussian_blur_heavy": {
+        "correlation": {
+          "mean": 0.7072185068596049,
+          "std": 0.1921710065937013,
+          "min": 0.5150475002659036,
+          "max": 0.8993895134533062
+        },
+        "detection_rate": {
+          "mean": 0.8507080078125,
+          "std": 0.0977783203125
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "median_filter_light": {
+        "correlation": {
+          "mean": 0.760602652426968,
+          "std": 0.21900553103136622,
+          "min": 0.5415971213956018,
+          "max": 0.9796081834583342
+        },
+        "detection_rate": {
+          "mean": 0.87939453125,
+          "std": 0.1103515625
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "median_filter_medium": {
+        "correlation": {
+          "mean": 0.5538661475304745,
+          "std": 0.04464702251247066,
+          "min": 0.5092191250180038,
+          "max": 0.5985131700429451
+        },
+        "detection_rate": {
+          "mean": 0.7694091796875,
+          "std": 0.0181884765625
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "median_filter_heavy": {
+        "correlation": {
+          "mean": 0.05713667240275746,
+          "std": 0.053719580153913794,
+          "min": 0.0034170922488436684,
+          "max": 0.11085625255667125
+        },
+        "detection_rate": {
+          "mean": 0.5308837890625,
+          "std": 0.0250244140625
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "print_scan_150dpi": {
+        "correlation": {
+          "mean": 0.7461223559252402,
+          "std": 0.23001628896298199,
+          "min": 0.5161060669622582,
+          "max": 0.9761386448882222
+        },
+        "detection_rate": {
+          "mean": 0.8721923828125,
+          "std": 0.1158447265625
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      },
+      "print_scan_100dpi": {
+        "correlation": {
+          "mean": 0.5083771899128582,
+          "std": 0.08661251495938474,
+          "min": 0.4217646749534734,
+          "max": 0.5949897048722429
+        },
+        "detection_rate": {
+          "mean": 0.749267578125,
+          "std": 0.042724609375
+        },
+        "success_rate": 0.0,
+        "test_count": 2
+      },
+      "histogram_equalization": {
+        "correlation": {
+          "mean": 0.7624965247827173,
+          "std": 0.2326292982209553,
+          "min": 0.5298672265617621,
+          "max": 0.9951258230036727
+        },
+        "detection_rate": {
+          "mean": 0.8792724609375,
+          "std": 0.1182861328125
+        },
+        "success_rate": 0.5,
+        "test_count": 2
+      }
+    }
+  }
+}
