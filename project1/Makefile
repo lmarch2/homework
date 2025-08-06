@@ -1,197 +1,211 @@
-# SM4 Implementation Makefile
+# SM4 Implementation Makefile - Redesigned for Performance Comparison
 
 CC = gcc
-CFLAGS = -Wall -Wextra -O3 -std=c99 -march=native
-CFLAGS_DEBUG = -Wall -Wextra -g -std=c99 -DDEBUG
+CFLAGS_BASIC = -Wall -Wextra -std=c99
+CFLAGS_O3 = -Wall -Wextra -O3 -std=c99  
+CFLAGS_NATIVE = -Wall -Wextra -O3 -std=c99 -march=native
 LDFLAGS = -lm
 
-# Source directories
+# Directories
 SRCDIR = src
 TESTDIR = tests
 BENCHDIR = benchmark
+BINDIR = bin
 
-# Object files
-BASIC_OBJS = $(SRCDIR)/sm4_basic.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
-TTABLE_OBJS = $(SRCDIR)/sm4_ttable.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
-AESNI_OBJS = $(SRCDIR)/sm4_aesni.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
-GFNI_OBJS = $(SRCDIR)/sm4_gfni.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
-GCM_OBJS = $(SRCDIR)/sm4_gcm.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
-ALL_OBJS = $(SRCDIR)/sm4_basic.o $(SRCDIR)/sm4_ttable.o $(SRCDIR)/sm4_aesni.o $(SRCDIR)/sm4_gfni.o $(SRCDIR)/sm4_gcm.o $(SRCDIR)/utils.o $(SRCDIR)/cpu_detect.o
+.PHONY: all clean test benchmark benchmark-all
 
-# Targets
-.PHONY: all clean test benchmark debug help
+# Default target
+all: benchmark-all
 
-all: test_sm4 benchmark_sm4
+# Object file compilation rules for different optimization levels
+$(SRCDIR)/%_basic.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS_BASIC) -c -o $@ $<
 
-# Main test executable
-test_sm4: $(ALL_OBJS) $(TESTDIR)/test_sm4.o
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+$(SRCDIR)/%_o3.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS_O3) -c -o $@ $<
 
-# Benchmark executable
-benchmark_sm4: $(ALL_OBJS) $(BENCHDIR)/benchmark.o
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+$(SRCDIR)/%_native.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS_NATIVE) -c -o $@ $<
 
-# Debug versions
-debug: CFLAGS = $(CFLAGS_DEBUG)
-debug: test_sm4_debug benchmark_sm4_debug
+$(SRCDIR)/sm4_aesni_native.o: $(SRCDIR)/sm4_aesni.c
+	$(CC) $(CFLAGS_NATIVE) -maes -mpclmul -c -o $@ $<
 
-test_sm4_debug: $(ALL_OBJS) $(TESTDIR)/test_sm4.o
-	$(CC) $(CFLAGS_DEBUG) -o $@ $^ $(LDFLAGS)
+$(SRCDIR)/sm4_gfni_native.o: $(SRCDIR)/sm4_gfni.c
+	$(CC) $(CFLAGS_NATIVE) -mgfni -mavx2 -mavx512f -c -o $@ $<
 
-benchmark_sm4_debug: $(ALL_OBJS) $(BENCHDIR)/benchmark.o
-	$(CC) $(CFLAGS_DEBUG) -o $@ $^ $(LDFLAGS)
+$(TESTDIR)/%_basic.o: $(TESTDIR)/%.c
+	$(CC) $(CFLAGS_BASIC) -c -o $@ $<
 
-# Individual implementations
-basic: $(BASIC_OBJS) $(TESTDIR)/test_sm4.o
-	$(CC) $(CFLAGS) -o test_basic $^ $(LDFLAGS)
+$(TESTDIR)/%_o3.o: $(TESTDIR)/%.c
+	$(CC) $(CFLAGS_O3) -c -o $@ $<
 
-ttable: $(TTABLE_OBJS) $(TESTDIR)/test_sm4.o
-	$(CC) $(CFLAGS) -o test_ttable $^ $(LDFLAGS)
+$(TESTDIR)/%_native.o: $(TESTDIR)/%.c
+	$(CC) $(CFLAGS_NATIVE) -c -o $@ $<
 
-aesni: $(AESNI_OBJS) $(TESTDIR)/test_sm4.o
-	$(CC) $(CFLAGS) -maes -mpclmul -o test_aesni $^ $(LDFLAGS)
+# Test executables for each implementation
+$(BINDIR)/test_basic: $(SRCDIR)/sm4_basic_basic.o $(TESTDIR)/test_unified_basic.o
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS_BASIC) -o $@ $^ $(LDFLAGS)
 
-gfni: $(GFNI_OBJS) $(TESTDIR)/test_sm4.o
-	$(CC) $(CFLAGS) -mgfni -mavx2 -mavx512f -o test_gfni $^ $(LDFLAGS)
+$(BINDIR)/test_o3: $(SRCDIR)/sm4_basic_o3.o $(TESTDIR)/test_unified_o3.o
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS_O3) -o $@ $^ $(LDFLAGS)
 
-# Object file compilation rules
-$(SRCDIR)/%.o: $(SRCDIR)/%.c $(SRCDIR)/sm4.h
-	$(CC) $(CFLAGS) -c -o $@ $<
+$(BINDIR)/test_native: $(SRCDIR)/sm4_basic_native.o $(TESTDIR)/test_unified_native.o
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS_NATIVE) -o $@ $^ $(LDFLAGS)
 
-$(SRCDIR)/sm4_aesni.o: $(SRCDIR)/sm4_aesni.c $(SRCDIR)/sm4.h
-	$(CC) $(CFLAGS) -maes -mpclmul -c -o $@ $<
+# Special compilation for T-table test with macro
+$(TESTDIR)/test_unified_ttable.o: $(TESTDIR)/test_unified.c
+	$(CC) $(CFLAGS_NATIVE) -DTESTING_TTABLE -c -o $@ $<
 
-$(SRCDIR)/sm4_gfni.o: $(SRCDIR)/sm4_gfni.c $(SRCDIR)/sm4.h
-	$(CC) $(CFLAGS) -mgfni -mavx2 -mavx512f -c -o $@ $<
+$(BINDIR)/test_ttable: $(SRCDIR)/sm4_ttable_native.o $(SRCDIR)/sm4_basic_native.o $(TESTDIR)/test_unified_ttable.o
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS_NATIVE) -o $@ $^ $(LDFLAGS)
 
-$(TESTDIR)/%.o: $(TESTDIR)/%.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+# Special compilation for AES-NI test with macro
+$(TESTDIR)/test_unified_aesni.o: $(TESTDIR)/test_unified.c
+	$(CC) $(CFLAGS_NATIVE) -DTESTING_AESNI -c -o $@ $<
 
-$(BENCHDIR)/%.o: $(BENCHDIR)/%.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+$(BINDIR)/test_aesni: $(SRCDIR)/sm4_aesni_native.o $(SRCDIR)/sm4_basic_native.o $(SRCDIR)/cpu_detect_native.o $(TESTDIR)/test_unified_aesni.o
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS_NATIVE) -maes -mpclmul -o $@ $^ $(LDFLAGS)
 
-# Test targets
-test: test_sm4
-	@echo "Running SM4 test suite..."
-	./test_sm4
+# Special compilation for GFNI test with macro
+$(TESTDIR)/test_unified_gfni.o: $(TESTDIR)/test_unified.c
+	$(CC) $(CFLAGS_NATIVE) -DTESTING_GFNI -c -o $@ $<
 
-test-basic: basic
-	@echo "Running basic implementation test..."
-	./test_basic
+$(BINDIR)/test_gfni: $(SRCDIR)/sm4_gfni_native.o $(SRCDIR)/sm4_basic_native.o $(SRCDIR)/cpu_detect_native.o $(TESTDIR)/test_unified_gfni.o
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS_NATIVE) -mgfni -mavx2 -mavx512f -o $@ $^ $(LDFLAGS)
 
-test-ttable: ttable
-	@echo "Running T-table implementation test..."
-	./test_ttable
+# Comprehensive test suite
+$(BINDIR)/test_comprehensive: $(SRCDIR)/sm4_basic_native.o $(SRCDIR)/sm4_ttable_native.o $(SRCDIR)/sm4_aesni_native.o $(SRCDIR)/sm4_gfni_native.o $(SRCDIR)/sm4_gcm_native.o $(SRCDIR)/utils_native.o $(SRCDIR)/cpu_detect_native.o $(TESTDIR)/test_sm4_native.o
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS_NATIVE) -maes -mpclmul -mgfni -mavx2 -mavx512f -o $@ $^ $(LDFLAGS)
 
-test-aesni: aesni
-	@echo "Running AES-NI implementation test..."
-	./test_aesni
+# GCM performance test
+$(BINDIR)/test_gcm_perf: $(SRCDIR)/sm4_basic_native.o $(SRCDIR)/sm4_gcm_native.o $(TESTDIR)/test_gcm_performance_native.o
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS_NATIVE) -o $@ $^ $(LDFLAGS)
 
-test-gfni: gfni
-	@echo "Running GFNI implementation test..."
-	./test_gfni
+$(SRCDIR)/sm4_gcm_native.o: $(SRCDIR)/sm4_gcm.c
+	$(CC) $(CFLAGS_NATIVE) -c -o $@ $<
 
-# Benchmark targets
-benchmark: benchmark_sm4
-	@echo "Running SM4 performance benchmark..."
-	./benchmark_sm4
+$(SRCDIR)/utils_native.o: $(SRCDIR)/utils.c
+	$(CC) $(CFLAGS_NATIVE) -c -o $@ $<
 
-benchmark-quick: benchmark_sm4
-	@echo "Running quick performance benchmark..."
-	./benchmark_sm4 | head -20
+$(TESTDIR)/test_sm4_native.o: $(TESTDIR)/test_sm4.c
+	$(CC) $(CFLAGS_NATIVE) -c -o $@ $<
 
-# Verification targets
-verify: test_sm4
-	@echo "Running comprehensive verification..."
-	./test_sm4
-	@echo "Verification complete."
+$(TESTDIR)/test_gcm_performance_native.o: $(TESTDIR)/test_gcm_performance.c
+	$(CC) $(CFLAGS_NATIVE) -c -o $@ $<
 
-# Performance analysis
-perf: benchmark_sm4
-	@echo "Running performance analysis..."
-	perf record -g ./benchmark_sm4
-	perf report
+# Comprehensive benchmark
+benchmark-all: $(BINDIR)/test_basic $(BINDIR)/test_o3 $(BINDIR)/test_native $(BINDIR)/test_ttable $(BINDIR)/test_aesni $(BINDIR)/test_gfni
+	@echo "=== SM4 Performance Comparison (vs Basic Implementation) ==="
+	@echo ""
+	@echo "Running Basic implementation (no optimization - baseline)..."
+	@$(BINDIR)/test_basic | grep "Performance:" | awk '{print $$2}' | sed 's/MB\/s//' > /tmp/basic_result
+	@BASIC_PERF=$$(cat /tmp/basic_result) && \
+	echo "Basic (gcc):           $${BASIC_PERF} MB/s (1.00x baseline)" && \
+	echo "" && \
+	echo "Running compiler optimizations..." && \
+	O3_PERF=$$($(BINDIR)/test_o3 | grep "Performance:" | awk '{print $$2}' | sed 's/MB\/s//') && \
+	O3_RATIO=$$(echo "scale=2; $$O3_PERF / $$BASIC_PERF" | bc) && \
+	echo "O3 optimization:       $${O3_PERF} MB/s ($${O3_RATIO}x)" && \
+	NATIVE_PERF=$$($(BINDIR)/test_native | grep "Performance:" | awk '{print $$2}' | sed 's/MB\/s//') && \
+	NATIVE_RATIO=$$(echo "scale=2; $$NATIVE_PERF / $$BASIC_PERF" | bc) && \
+	echo "O3 + march=native:     $${NATIVE_PERF} MB/s ($${NATIVE_RATIO}x)" && \
+	echo "" && \
+	echo "Running algorithm optimizations..." && \
+	TTABLE_PERF=$$($(BINDIR)/test_ttable | grep "Performance:" | awk '{print $$2}' | sed 's/MB\/s//') && \
+	TTABLE_RATIO=$$(echo "scale=2; $$TTABLE_PERF / $$BASIC_PERF" | bc) && \
+	echo "T-table optimization:  $${TTABLE_PERF} MB/s ($${TTABLE_RATIO}x)" && \
+	AESNI_PERF=$$($(BINDIR)/test_aesni | grep "Performance:" | awk '{print $$2}' | sed 's/MB\/s//') && \
+	AESNI_RATIO=$$(echo "scale=2; $$AESNI_PERF / $$BASIC_PERF" | bc) && \
+	echo "AES-NI optimization:   $${AESNI_PERF} MB/s ($${AESNI_RATIO}x)" && \
+	GFNI_PERF=$$($(BINDIR)/test_gfni | grep "Performance:" | awk '{print $$2}' | sed 's/MB\/s//') && \
+	GFNI_RATIO=$$(echo "scale=2; $$GFNI_PERF / $$BASIC_PERF" | bc) && \
+	echo "GFNI optimization:     $${GFNI_PERF} MB/s ($${GFNI_RATIO}x)" && \
+	echo "" && \
+	echo "Note: All optimizations compared against Basic (no compiler optimization)"
 
-# Memory analysis
-memcheck: test_sm4
-	@echo "Running memory analysis..."
-	valgrind --tool=memcheck --leak-check=full ./test_sm4
+# Individual tests
+test-basic: $(BINDIR)/test_basic
+	@echo "Testing Basic implementation (no optimization)..."
+	$(BINDIR)/test_basic
 
-# Static analysis
-analyze:
-	@echo "Running static analysis..."
-	cppcheck --enable=all $(SRCDIR)/ $(TESTDIR)/ $(BENCHDIR)/
+test-o3: $(BINDIR)/test_o3
+	@echo "Testing O3 optimized implementation..."
+	$(BINDIR)/test_o3
 
-# Code coverage
-coverage: CFLAGS += --coverage
-coverage: LDFLAGS += --coverage
-coverage: test_sm4
-	@echo "Running code coverage analysis..."
-	./test_sm4
-	gcov $(SRCDIR)/*.c
-	lcov --capture --directory . --output-file coverage.info
-	genhtml coverage.info --output-directory coverage_html
+test-native: $(BINDIR)/test_native
+	@echo "Testing native optimized implementation..."
+	$(BINDIR)/test_native
 
-# Assembly output
-asm: $(SRCDIR)/sm4_basic.c $(SRCDIR)/sm4_ttable.c $(SRCDIR)/sm4_aesni.c
-	@echo "Generating assembly output..."
-	$(CC) $(CFLAGS) -S -o $(SRCDIR)/sm4_basic.s $(SRCDIR)/sm4_basic.c
-	$(CC) $(CFLAGS) -S -o $(SRCDIR)/sm4_ttable.s $(SRCDIR)/sm4_ttable.c
-	$(CC) $(CFLAGS) -maes -mpclmul -S -o $(SRCDIR)/sm4_aesni.s $(SRCDIR)/sm4_aesni.c
+test-ttable: $(BINDIR)/test_ttable
+	@echo "Testing T-table implementation..."
+	$(BINDIR)/test_ttable
 
-# Clean targets
+test-aesni: $(BINDIR)/test_aesni
+	@echo "Testing AES-NI implementation..."
+	$(BINDIR)/test_aesni
+
+test-gfni: $(BINDIR)/test_gfni
+	@echo "Testing GFNI implementation..."
+	$(BINDIR)/test_gfni
+
+# Comprehensive test including GCM
+test-comprehensive: $(BINDIR)/test_comprehensive
+	@echo "Running comprehensive SM4 test suite (including GCM)..."
+	$(BINDIR)/test_comprehensive
+
+# GCM performance test
+test-gcm-perf: $(BINDIR)/test_gcm_perf
+	@echo "Testing SM4-GCM performance..."
+	$(BINDIR)/test_gcm_perf
+
+# GCM comparison test (basic vs optimized)
+test-gcm-comparison: $(BINDIR)/test_gcm_comparison
+	@echo "Testing SM4-GCM performance comparison..."
+	$(BINDIR)/test_gcm_comparison
+
+$(BINDIR)/test_gcm_comparison: $(SRCDIR)/sm4_basic_native.o $(SRCDIR)/sm4_gcm_native.o $(SRCDIR)/sm4_gcm_optimized_native.o $(TESTDIR)/test_gcm_comparison_native.o
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS_NATIVE) -o $@ $^ $(LDFLAGS)
+
+$(TESTDIR)/test_gcm_comparison_native.o: $(TESTDIR)/test_gcm_comparison.c
+	$(CC) $(CFLAGS_NATIVE) -c -o $@ $<
+
+$(SRCDIR)/sm4_gcm_optimized_native.o: $(SRCDIR)/sm4_gcm_optimized.c
+	$(CC) $(CFLAGS_NATIVE) -c -o $@ $<
+
+# Quick test
+quick-test: $(BINDIR)/test_basic
+	@echo "Quick correctness test..."
+	$(BINDIR)/test_basic | head -10
+
+# Clean
 clean:
 	rm -f $(SRCDIR)/*.o $(TESTDIR)/*.o $(BENCHDIR)/*.o
-	rm -f test_sm4 benchmark_sm4 test_sm4_debug benchmark_sm4_debug
-	rm -f test_basic test_ttable test_aesni test_gfni
-	rm -f $(SRCDIR)/*.s
-	rm -f *.gcov *.gcda *.gcno coverage.info
-	rm -rf coverage_html
+	rm -rf $(BINDIR)
+	rm -f /tmp/basic_result
 
-clean-all: clean
-	rm -f perf.data*
-
-# Installation (optional)
-install: test_sm4 benchmark_sm4
-	@echo "Installing SM4 tools..."
-	cp test_sm4 /usr/local/bin/sm4-test
-	cp benchmark_sm4 /usr/local/bin/sm4-benchmark
-
-uninstall:
-	@echo "Uninstalling SM4 tools..."
-	rm -f /usr/local/bin/sm4-test
-	rm -f /usr/local/bin/sm4-benchmark
-
-# Help target
+# Help
 help:
-	@echo "SM4 Implementation Makefile"
+	@echo "SM4 Performance Comparison Makefile"
 	@echo ""
-	@echo "Available targets:"
-	@echo "  all          - Build test suite and benchmark"
-	@echo "  test         - Build and run test suite"
-	@echo "  benchmark    - Build and run performance benchmark"
-	@echo "  debug        - Build debug versions"
-	@echo "  clean        - Clean build files"
-	@echo ""
-	@echo "Individual implementations:"
-	@echo "  basic        - Build basic implementation"
-	@echo "  ttable       - Build T-table optimized implementation"
-	@echo "  aesni        - Build AES-NI optimized implementation"
-	@echo "  gfni         - Build GFNI optimized implementation"
-	@echo ""
-	@echo "Testing targets:"
-	@echo "  test-basic   - Test basic implementation"
-	@echo "  test-ttable  - Test T-table implementation"
-	@echo "  test-aesni   - Test AES-NI implementation"
-	@echo "  test-gfni    - Test GFNI implementation"
-	@echo "  verify       - Run comprehensive verification"
-	@echo ""
-	@echo "Analysis targets:"
-	@echo "  perf         - Run performance profiling"
-	@echo "  memcheck     - Run memory analysis"
-	@echo "  analyze      - Run static analysis"
-	@echo "  coverage     - Generate code coverage report"
-	@echo "  asm          - Generate assembly output"
-	@echo ""
-	@echo "Compiler flags:"
-	@echo "  CFLAGS = $(CFLAGS)"
+	@echo "Targets:"
+	@echo "  all / benchmark-all  - Run comprehensive performance comparison"
+	@echo "  test-basic          - Test basic implementation (baseline)"
+	@echo "  test-o3             - Test O3 optimized implementation"
+	@echo "  test-native         - Test native optimized implementation"
+	@echo "  test-ttable         - Test T-table implementation"
+	@echo "  test-aesni          - Test AES-NI implementation"
+	@echo "  test-gfni           - Test GFNI implementation"
+	@echo "  test-comprehensive  - Run comprehensive test suite (including GCM)"
+	@echo "  test-gcm-perf       - Test SM4-GCM performance"
+	@echo "  test-gcm-comparison - Compare basic vs optimized GCM performance"
+	@echo "  quick-test          - Quick correctness test"
+	@echo "  clean               - Clean build files"

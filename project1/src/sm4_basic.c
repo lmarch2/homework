@@ -3,8 +3,7 @@
 
 // System parameters FK
 const uint32_t FK[4] = {
-    0xA3B1BAC6, 0x56AA3350, 0x677D9197, 0xB27022DC
-};
+    0xA3B1BAC6, 0x56AA3350, 0x677D9197, 0xB27022DC};
 
 // Fixed parameters CK
 const uint32_t CK[32] = {
@@ -15,8 +14,7 @@ const uint32_t CK[32] = {
     0xC0C7CED5, 0xDCE3EAF1, 0xF8FF060D, 0x141B2229,
     0x30373E45, 0x4C535A61, 0x686F767D, 0x848B9299,
     0xA0A7AEB5, 0xBCC3CAD1, 0xD8DFE6ED, 0xF4FB0209,
-    0x10171E25, 0x2C333A41, 0x484F565D, 0x646B7279
-};
+    0x10171E25, 0x2C333A41, 0x484F565D, 0x646B7279};
 
 // SM4 S-box
 const uint8_t SM4_SBOX[256] = {
@@ -35,22 +33,24 @@ const uint8_t SM4_SBOX[256] = {
     0x8D, 0x1B, 0xAF, 0x92, 0xBB, 0xDD, 0xBC, 0x7F, 0x11, 0xD9, 0x5C, 0x41, 0x1F, 0x10, 0x5A, 0xD8,
     0x0A, 0xC1, 0x31, 0x88, 0xA5, 0xCD, 0x7B, 0xBD, 0x2D, 0x74, 0xD0, 0x12, 0xB8, 0xE5, 0xB4, 0xB0,
     0x89, 0x69, 0x97, 0x4A, 0x0C, 0x96, 0x77, 0x7E, 0x65, 0xB9, 0xF1, 0x09, 0xC5, 0x6E, 0xC6, 0x84,
-    0x18, 0xF0, 0x7D, 0xEC, 0x3A, 0xDC, 0x4D, 0x20, 0x79, 0xEE, 0x5F, 0x3E, 0xD7, 0xCB, 0x39, 0x48
-};
+    0x18, 0xF0, 0x7D, 0xEC, 0x3A, 0xDC, 0x4D, 0x20, 0x79, 0xEE, 0x5F, 0x3E, 0xD7, 0xCB, 0x39, 0x48};
 
 // Helper functions
-static inline uint32_t rotl(uint32_t x, int n) {
+static inline uint32_t rotl(uint32_t x, int n)
+{
     return (x << n) | (x >> (32 - n));
 }
 
-static inline uint32_t get_u32_be(const uint8_t *data) {
+static inline uint32_t get_u32_be(const uint8_t *data)
+{
     return ((uint32_t)data[0] << 24) |
            ((uint32_t)data[1] << 16) |
            ((uint32_t)data[2] << 8) |
            ((uint32_t)data[3]);
 }
 
-static inline void put_u32_be(uint8_t *data, uint32_t value) {
+static inline void put_u32_be(uint8_t *data, uint32_t value)
+{
     data[0] = (value >> 24) & 0xFF;
     data[1] = (value >> 16) & 0xFF;
     data[2] = (value >> 8) & 0xFF;
@@ -58,13 +58,14 @@ static inline void put_u32_be(uint8_t *data, uint32_t value) {
 }
 
 // Non-linear transformation τ (S-box substitution)
-static uint32_t sm4_sbox_transform(uint32_t x) {
+static uint32_t sm4_sbox_transform(uint32_t x)
+{
     uint8_t a[4];
     a[0] = (x >> 24) & 0xFF;
     a[1] = (x >> 16) & 0xFF;
     a[2] = (x >> 8) & 0xFF;
     a[3] = x & 0xFF;
-    
+
     return ((uint32_t)SM4_SBOX[a[0]] << 24) |
            ((uint32_t)SM4_SBOX[a[1]] << 16) |
            ((uint32_t)SM4_SBOX[a[2]] << 8) |
@@ -72,84 +73,94 @@ static uint32_t sm4_sbox_transform(uint32_t x) {
 }
 
 // Linear transformation L
-static uint32_t sm4_linear_transform(uint32_t x) {
+static uint32_t sm4_linear_transform(uint32_t x)
+{
     return x ^ rotl(x, 2) ^ rotl(x, 10) ^ rotl(x, 18) ^ rotl(x, 24);
 }
 
 // Linear transformation L' for key expansion
-static uint32_t sm4_linear_transform_key(uint32_t x) {
+static uint32_t sm4_linear_transform_key(uint32_t x)
+{
     return x ^ rotl(x, 13) ^ rotl(x, 23);
 }
 
 // Round function F
-static uint32_t sm4_round_function(uint32_t x) {
+static uint32_t sm4_round_function(uint32_t x)
+{
     return sm4_linear_transform(sm4_sbox_transform(x));
 }
 
 // Round function T' for key expansion
-static uint32_t sm4_key_round_function(uint32_t x) {
+static uint32_t sm4_key_round_function(uint32_t x)
+{
     return sm4_linear_transform_key(sm4_sbox_transform(x));
 }
 
 // Key expansion
-void sm4_setkey_enc(sm4_context *ctx, const uint8_t key[SM4_KEY_SIZE]) {
+void sm4_setkey_enc(sm4_context *ctx, const uint8_t key[SM4_KEY_SIZE])
+{
     uint32_t K[4];
     uint32_t rk[4];
     int i;
-    
+
     // Convert key to 32-bit words
     K[0] = get_u32_be(key);
     K[1] = get_u32_be(key + 4);
     K[2] = get_u32_be(key + 8);
     K[3] = get_u32_be(key + 12);
-    
+
     // Initialize with system parameters
     rk[0] = K[0] ^ FK[0];
     rk[1] = K[1] ^ FK[1];
     rk[2] = K[2] ^ FK[2];
     rk[3] = K[3] ^ FK[3];
-    
+
     // Generate round keys
-    for (i = 0; i < SM4_ROUNDS; i++) {
-        ctx->rk[i] = rk[(i + 4) % 4] = rk[i % 4] ^ 
-            sm4_key_round_function(rk[(i + 1) % 4] ^ rk[(i + 2) % 4] ^ rk[(i + 3) % 4] ^ CK[i]);
+    for (i = 0; i < SM4_ROUNDS; i++)
+    {
+        ctx->rk[i] = rk[(i + 4) % 4] = rk[i % 4] ^
+                                       sm4_key_round_function(rk[(i + 1) % 4] ^ rk[(i + 2) % 4] ^ rk[(i + 3) % 4] ^ CK[i]);
     }
 }
 
 // For decryption, we use the same round keys in reverse order
-void sm4_setkey_dec(sm4_context *ctx, const uint8_t key[SM4_KEY_SIZE]) {
+void sm4_setkey_dec(sm4_context *ctx, const uint8_t key[SM4_KEY_SIZE])
+{
     sm4_context temp_ctx;
     int i;
-    
+
     // Generate encryption round keys
     sm4_setkey_enc(&temp_ctx, key);
-    
+
     // Reverse the order for decryption
-    for (i = 0; i < SM4_ROUNDS; i++) {
+    for (i = 0; i < SM4_ROUNDS; i++)
+    {
         ctx->rk[i] = temp_ctx.rk[SM4_ROUNDS - 1 - i];
     }
 }
 
 // SM4 encryption/decryption (ECB mode)
-void sm4_crypt_ecb(sm4_context *ctx, int mode, const uint8_t input[SM4_BLOCK_SIZE], uint8_t output[SM4_BLOCK_SIZE]) {
+void sm4_crypt_ecb(sm4_context *ctx, int mode, const uint8_t input[SM4_BLOCK_SIZE], uint8_t output[SM4_BLOCK_SIZE])
+{
     uint32_t X[4];
     int i;
-    
+
     // Convert input to 32-bit words
     X[0] = get_u32_be(input);
     X[1] = get_u32_be(input + 4);
     X[2] = get_u32_be(input + 8);
     X[3] = get_u32_be(input + 12);
-    
+
     // 32 rounds of encryption/decryption
-    for (i = 0; i < SM4_ROUNDS; i++) {
+    for (i = 0; i < SM4_ROUNDS; i++)
+    {
         uint32_t temp = X[0];
         X[0] = X[1];
         X[1] = X[2];
         X[2] = X[3];
         X[3] = temp ^ sm4_round_function(X[0] ^ X[1] ^ X[2] ^ ctx->rk[i]);
     }
-    
+
     // Convert output from 32-bit words (reverse byte order for output)
     put_u32_be(output, X[3]);
     put_u32_be(output + 4, X[2]);
@@ -158,13 +169,15 @@ void sm4_crypt_ecb(sm4_context *ctx, int mode, const uint8_t input[SM4_BLOCK_SIZ
 }
 
 // Basic implementation wrapper functions
-void sm4_basic_encrypt(const uint8_t *key, const uint8_t *input, uint8_t *output) {
+void sm4_basic_encrypt(const uint8_t *key, const uint8_t *input, uint8_t *output)
+{
     sm4_context ctx;
     sm4_setkey_enc(&ctx, key);
     sm4_crypt_ecb(&ctx, 1, input, output);
 }
 
-void sm4_basic_decrypt(const uint8_t *key, const uint8_t *input, uint8_t *output) {
+void sm4_basic_decrypt(const uint8_t *key, const uint8_t *input, uint8_t *output)
+{
     sm4_context ctx;
     sm4_setkey_dec(&ctx, key);
     sm4_crypt_ecb(&ctx, 0, input, output);
