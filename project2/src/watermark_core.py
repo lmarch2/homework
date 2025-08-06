@@ -192,9 +192,10 @@ class DCTWatermark:
                 for pos in self.watermark_positions:
                     u, v = pos
                     if u < dct_block.shape[0] and v < dct_block.shape[1]:
-                        # 量化调制嵌入
+                        # 固定强度嵌入，避免零系数问题
                         original_coeff = dct_block[u, v]
-                        dct_block[u, v] = original_coeff + self.alpha * watermark_bit * abs(original_coeff)
+                        # 使用固定强度嵌入
+                        dct_block[u, v] = original_coeff + self.alpha * watermark_bit * 100
                 
                 # IDCT重构
                 watermarked_block = self._idct2d(dct_block)
@@ -263,24 +264,25 @@ class DCTWatermark:
                 # 计算该块的水印响应
                 block_response = 0
                 valid_positions = 0
+                current_watermark_bit = reference_sequence[block_idx]
                 
                 for pos in positions:
                     u, v = pos
                     if u < dct_block.shape[0] and v < dct_block.shape[1]:
-                        # 水印响应计算
+                        # 提取水印：只看系数符号
                         coeff_value = dct_block[u, v]
-                        expected_sign = reference_sequence[block_idx]
-                        
-                        # 符号检测
-                        detected_sign = 1 if coeff_value > 0 else -1
-                        block_response += detected_sign * expected_sign
+                        # 符号检测：正系数表示+1，负系数表示-1
+                        detected_bit = 1 if coeff_value > 0 else -1
+                        block_response += detected_bit
                         valid_positions += 1
                 
                 if valid_positions > 0:
                     block_response /= valid_positions
                     
                 block_responses.append(block_response)
-                extracted_sequence.append(1 if block_response > 0 else -1)
+                # 基于响应符号判断水印位
+                extracted_bit = 1 if block_response > 0 else -1
+                extracted_sequence.append(extracted_bit)
                 block_idx += 1
         
         # 计算相关系数
