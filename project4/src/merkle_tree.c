@@ -226,7 +226,7 @@ int merkle_generate_audit_proof(merkle_tree_t *tree, uint64_t leaf_index, audit_
     return 0;
 }
 
-// 简化的验证算法，根据实际生成的路径进行验证
+// 通用的验证算法 - 修复版本
 int merkle_verify_audit_proof(const audit_proof_t *proof, const uint8_t *leaf_hash,
                               const uint8_t *root_hash)
 {
@@ -236,31 +236,21 @@ int merkle_verify_audit_proof(const audit_proof_t *proof, const uint8_t *leaf_ha
     uint8_t computed_hash[MERKLE_NODE_SIZE];
     memcpy(computed_hash, leaf_hash, MERKLE_NODE_SIZE);
 
-    // 根据实际生成的路径调整验证逻辑
-    if (proof->leaf_index == 6 && proof->path_len == 2)
-    {
-        // 实际路径是 [left_subtree, right_45]
-        // 第一步: Hash(right_45, leaf6)
-        uint8_t temp[MERKLE_NODE_SIZE];
-        merkle_compute_internal_hash(proof->path[1], computed_hash, temp);
-        // 第二步: Hash(left_subtree, temp)
-        merkle_compute_internal_hash(proof->path[0], temp, computed_hash);
-        return memcmp(computed_hash, root_hash, MERKLE_NODE_SIZE) == 0 ? 0 : -1;
-    }
-
-    // 对于其他情况，使用原有的逻辑
     uint64_t index = proof->leaf_index;
 
-    for (int i = proof->path_len - 1; i >= 0; i--)
+    // 从底层开始，按照路径顺序构建
+    for (int i = 0; i < proof->path_len; i++)
     {
         uint8_t temp_hash[MERKLE_NODE_SIZE];
 
         if (index % 2 == 0)
         {
+            // 当前节点是左子节点
             merkle_compute_internal_hash(computed_hash, proof->path[i], temp_hash);
         }
         else
         {
+            // 当前节点是右子节点
             merkle_compute_internal_hash(proof->path[i], computed_hash, temp_hash);
         }
 
