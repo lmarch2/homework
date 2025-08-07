@@ -31,7 +31,7 @@ static void sm3_process_block_optimized(sm3_ctx_t *ctx, const uint8_t *block)
 
     for (j = 0; j < 16; j++)
     {
-        W[j] = (block[j * 4] << 24) | (block[j * 4 + 1] << 16) | 
+        W[j] = (block[j * 4] << 24) | (block[j * 4 + 1] << 16) |
                (block[j * 4 + 2] << 8) | block[j * 4 + 3];
     }
 

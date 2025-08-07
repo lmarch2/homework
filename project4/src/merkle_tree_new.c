@@ -165,7 +165,6 @@ static void audit_path_recursive(uint8_t **leaf_hashes, uint64_t n, uint64_t m,
 
     if (m < k)
     {
-        // 叶子在左子树，需要右子树的根作为证明
         uint8_t right_hash[MERKLE_NODE_SIZE];
         compute_tree_hashes(leaf_hashes + k, n - k, right_hash);
         if (proof->path_len < MAX_AUDIT_PATH)
@@ -177,7 +176,6 @@ static void audit_path_recursive(uint8_t **leaf_hashes, uint64_t n, uint64_t m,
     }
     else
     {
-        // 叶子在右子树，需要左子树的根作为证明
         uint8_t left_hash[MERKLE_NODE_SIZE];
         compute_tree_hashes(leaf_hashes, k, left_hash);
         if (proof->path_len < MAX_AUDIT_PATH)
@@ -226,49 +224,35 @@ int merkle_generate_audit_proof(merkle_tree_t *tree, uint64_t leaf_index, audit_
     return 0;
 }
 
-// 简化的验证算法，根据实际生成的路径进行验证
 int merkle_verify_audit_proof(const audit_proof_t *proof, const uint8_t *leaf_hash,
                               const uint8_t *root_hash)
 {
     if (!proof || !leaf_hash || !root_hash)
         return -1;
 
-    uint8_t computed_hash[MERKLE_NODE_SIZE];
-    memcpy(computed_hash, leaf_hash, MERKLE_NODE_SIZE);
+    uint8_t current_hash[MERKLE_NODE_SIZE];
+    memcpy(current_hash, leaf_hash, MERKLE_NODE_SIZE);
 
-    // 根据实际生成的路径调整验证逻辑
-    if (proof->leaf_index == 6 && proof->path_len == 2)
-    {
-        // 实际路径是 [left_subtree, right_45]
-        // 第一步: Hash(right_45, leaf6)
-        uint8_t temp[MERKLE_NODE_SIZE];
-        merkle_compute_internal_hash(proof->path[1], computed_hash, temp);
-        // 第二步: Hash(left_subtree, temp)
-        merkle_compute_internal_hash(proof->path[0], temp, computed_hash);
-        return memcmp(computed_hash, root_hash, MERKLE_NODE_SIZE) == 0 ? 0 : -1;
-    }
-
-    // 对于其他情况，使用原有的逻辑
     uint64_t index = proof->leaf_index;
 
-    for (int i = proof->path_len - 1; i >= 0; i--)
+    for (int i = 0; i < proof->path_len; i++)
     {
         uint8_t temp_hash[MERKLE_NODE_SIZE];
 
         if (index % 2 == 0)
         {
-            merkle_compute_internal_hash(computed_hash, proof->path[i], temp_hash);
+            merkle_compute_internal_hash(current_hash, proof->path[i], temp_hash);
         }
         else
         {
-            merkle_compute_internal_hash(proof->path[i], computed_hash, temp_hash);
+            merkle_compute_internal_hash(proof->path[i], current_hash, temp_hash);
         }
 
-        memcpy(computed_hash, temp_hash, MERKLE_NODE_SIZE);
+        memcpy(current_hash, temp_hash, MERKLE_NODE_SIZE);
         index /= 2;
     }
 
-    return memcmp(computed_hash, root_hash, MERKLE_NODE_SIZE) == 0 ? 0 : -1;
+    return memcmp(current_hash, root_hash, MERKLE_NODE_SIZE) == 0 ? 0 : -1;
 }
 
 void merkle_get_root_hash(merkle_tree_t *tree, uint8_t *root_hash)

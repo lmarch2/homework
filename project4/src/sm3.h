@@ -24,15 +24,15 @@ void sm3_update_optimized(sm3_ctx_t *ctx, const uint8_t *data, size_t len);
 void sm3_final_optimized(sm3_ctx_t *ctx, uint8_t *digest);
 void sm3_hash_optimized(const uint8_t *data, size_t len, uint8_t *digest);
 
-int sm3_length_extension_attack(const uint8_t *original_hash, 
-                               uint64_t original_len,
-                               const uint8_t *append_data, 
-                               size_t append_len,
-                               uint8_t *new_hash,
-                               uint8_t **extended_message,
-                               size_t *extended_len);
+int sm3_length_extension_attack(const uint8_t *original_hash,
+                                uint64_t original_len,
+                                const uint8_t *append_data,
+                                size_t append_len,
+                                uint8_t *new_hash,
+                                uint8_t **extended_message,
+                                size_t *extended_len);
 
-int verify_length_extension_attack(const char *secret, 
+int verify_length_extension_attack(const char *secret,
                                    const char *original_msg,
                                    const char *append_msg);
 
