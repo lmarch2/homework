@@ -29,6 +29,8 @@ typedef struct
     uint8_t path[MAX_AUDIT_PATH][MERKLE_NODE_SIZE];
     int path_len;
     uint64_t leaf_index;
+    uint8_t leaf_hash[MERKLE_NODE_SIZE]; // 添加叶子哈希字段
+    uint64_t tree_size;                  // 添加树大小字段
 } audit_proof_t;
 
 typedef struct
@@ -51,6 +53,14 @@ void merkle_compute_internal_hash(const uint8_t *left, const uint8_t *right, uin
 int merkle_generate_audit_proof(merkle_tree_t *tree, uint64_t leaf_index, audit_proof_t *proof);
 int merkle_verify_audit_proof(const audit_proof_t *proof, const uint8_t *leaf_hash,
                               const uint8_t *root_hash);
+
+// 不存在性证明函数
+int merkle_prove_non_existence(merkle_tree_t *tree, const uint8_t *data, size_t len,
+                               audit_proof_t **left_proof, audit_proof_t **right_proof);
+int merkle_verify_non_existence(const uint8_t *data, size_t len,
+                                const audit_proof_t *left_proof,
+                                const audit_proof_t *right_proof,
+                                const uint8_t *root_hash);
 
 int merkle_generate_consistency_proof(merkle_tree_t *old_tree, merkle_tree_t *new_tree,
                                       consistency_proof_t *proof);
