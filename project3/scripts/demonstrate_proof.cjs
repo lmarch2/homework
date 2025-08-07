@@ -50,9 +50,9 @@ async function demonstrateProofGeneration() {
     console.log("   - Perfect Zero-Knowledge: Proofs reveal nothing about secrets");
 
     console.log("\n7. Implementation Steps:");
-    console.log("   ✓ Circuit design and compilation completed");
-    console.log("   ✓ Constraint generation: 860 total constraints");
-    console.log("   ✓ Witness generation tested and verified");
+    console.log("   OK Circuit design and compilation completed");
+    console.log("   OK Constraint generation: 860 total constraints");
+    console.log("   OK Witness generation tested and verified");
     console.log("   ⚠ Powers of Tau download required for full proof generation");
     console.log("   ⚠ Trusted setup ceremony would be needed in production");
 

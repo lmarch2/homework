@@ -43,7 +43,7 @@ async function generateProof() {
     console.log("   snarkjs zkey export verificationkey build/poseidon2_hash_final.zkey build/verification_key.json");
 
     console.log("\n6. Generate witness:");
-    console.log("   node build/poseidon2_hash_js/generate_witness.js build/poseidon2_hash_js/poseidon2_hash.wasm build/input.json build/witness.wtns");
+    console.log("   node build/poseidon2_hash_js/generate_witness.cjs build/poseidon2_hash_js/poseidon2_hash.wasm build/input.json build/witness.wtns");
 
     console.log("\n7. Generate proof:");
     console.log("   snarkjs groth16 prove build/poseidon2_hash_final.zkey build/witness.wtns build/proof.json build/public.json");

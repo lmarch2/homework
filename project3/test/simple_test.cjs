@@ -7,7 +7,7 @@ async function testPoseidon2() {
     try {
         // Load the circuit
         const circuit = await wasm_tester(path.join(__dirname, "..", "circuits", "poseidon2_hash.circom"));
-        console.log("✓ Circuit loaded successfully");
+        console.log("Circuit loaded successfully");
 
         // Test 1: Hash of 0
         console.log("\n--- Test 1: Hash of 0 ---");
@@ -17,7 +17,7 @@ async function testPoseidon2() {
         const hash1 = witness1[1];
         console.log("Input: 0");
         console.log("Hash: ", hash1.toString());
-        console.log("✓ Constraints satisfied");
+        console.log("Constraints satisfied");
 
         // Test 2: Hash of 1
         console.log("\n--- Test 2: Hash of 1 ---");
@@ -27,7 +27,7 @@ async function testPoseidon2() {
         const hash2 = witness2[1];
         console.log("Input: 1");
         console.log("Hash: ", hash2.toString());
-        console.log("✓ Constraints satisfied");
+        console.log("Constraints satisfied");
 
         // Test 3: Hash of 42
         console.log("\n--- Test 3: Hash of 42 ---");
@@ -37,14 +37,14 @@ async function testPoseidon2() {
         const hash3 = witness3[1];
         console.log("Input: 42");
         console.log("Hash: ", hash3.toString());
-        console.log("✓ Constraints satisfied");
+        console.log("Constraints satisfied");
 
         // Test 4: Different inputs produce different hashes
         console.log("\n--- Test 4: Hash uniqueness ---");
         console.log("Hash(0) !== Hash(1):", hash1.toString() !== hash2.toString());
         console.log("Hash(1) !== Hash(42):", hash2.toString() !== hash3.toString());
         console.log("Hash(0) !== Hash(42):", hash1.toString() !== hash3.toString());
-        console.log("✓ Different inputs produce different hashes");
+        console.log("Different inputs produce different hashes");
 
         // Test 5: Deterministic behavior
         console.log("\n--- Test 5: Deterministic behavior ---");
@@ -53,7 +53,7 @@ async function testPoseidon2() {
         console.log("Hash(42) first: ", hash3.toString());
         console.log("Hash(42) second:", hash3_repeat.toString());
         console.log("Deterministic:", hash3.toString() === hash3_repeat.toString());
-        console.log("✓ Hash function is deterministic");
+        console.log("Hash function is deterministic");
 
         // Circuit statistics
         console.log("\n--- Circuit Statistics ---");
@@ -65,10 +65,10 @@ async function testPoseidon2() {
         console.log("- Public outputs: 1");
         console.log("- Total wires: 862");
 
-        console.log("\n✅ All tests passed!");
+        console.log("\nAll tests passed!");
 
     } catch (error) {
-        console.error("❌ Test failed:", error.message);
+        console.error("Test failed:", error.message);
         console.error(error.stack);
     }
 }

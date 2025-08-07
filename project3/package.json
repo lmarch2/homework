@@ -1,11 +1,17 @@
 {
   "name": "project3",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "mocha test/poseidon2_test.js",
     "compile": "circom circuits/poseidon2_hash.circom --r1cs --wasm --sym -o build/",
-    "generate-proof": "node scripts/generate_proof.js",
+    "generate-proof": "node scripts/generate_proof.cjs",
+    "demonstrate": "node scripts/demonstrate_proof.cjs",
+    "benchmark": "node scripts/benchmark.cjs",
+    "comprehensive": "node scripts/comprehensive_tests.cjs",
+    "experiment": "node scripts/complete_experiment.cjs",
+    "report": "node scripts/experiment_report.cjs",
     "setup": "npm install && npm run compile"
   },
   "keywords": [

@@ -13,5 +13,5 @@
     "templateInstances": 69
   },
   "proofStatement": "I know a preimage x such that Poseidon2(x) = 12734957036258313384458817466501339664620251908681212896654508210380655274248",
-  "timestamp": "2025-08-07T06:33:34.043Z"
+  "timestamp": "2025-08-07T09:18:08.504Z"
 }

@@ -36,17 +36,17 @@ async function generateExperimentReport() {
     console.log();
 
     console.log("4. Groth16证明生成过程");
-    console.log("   ✓ 步骤1: 电路编译 - 生成R1CS约束系统");
-    console.log("   ✓ 步骤2: 可信设置 - 使用Powers of Tau");
-    console.log("   ✓ 步骤3: 密钥生成 - 创建证明密钥和验证密钥");
-    console.log("   ✓ 步骤4: 见证计算 - 生成电路见证");
-    console.log("   ✓ 步骤5: 证明生成 - 创建零知识证明");
-    console.log("   ✓ 步骤6: 证明验证 - 验证成功");
+    console.log("   OK 步骤1: 电路编译 - 生成R1CS约束系统");
+    console.log("   OK 步骤2: 可信设置 - 使用Powers of Tau");
+    console.log("   OK 步骤3: 密钥生成 - 创建证明密钥和验证密钥");
+    console.log("   OK 步骤4: 见证计算 - 生成电路见证");
+    console.log("   OK 步骤5: 证明生成 - 创建零知识证明");
+    console.log("   OK 步骤6: 证明验证 - 验证成功");
     console.log();
 
     console.log("5. 实验结果");
     console.log("   证明生成: 成功");
-    console.log("   证明验证: 通过 ✓");
+    console.log("   证明验证: 通过 OK");
     console.log("   证明大小: 3个椭圆曲线点 (恒定大小)");
     console.log("   验证时间: 毫秒级 (非常快)");
     console.log();
@@ -71,11 +71,11 @@ async function generateExperimentReport() {
     console.log();
 
     console.log("8. 安全性分析");
-    console.log("   ✓ 完备性: 诚实证明者总能生成有效证明");
-    console.log("   ✓ 可靠性: 恶意证明者无法伪造有效证明");
-    console.log("   ✓ 零知识: 证明不泄露私有输入信息");
-    console.log("   ✓ 非交互: 无需证明者和验证者交互");
-    console.log("   ✓ 简洁性: 证明大小恒定，验证快速");
+    console.log("   OK 完备性: 诚实证明者总能生成有效证明");
+    console.log("   OK 可靠性: 恶意证明者无法伪造有效证明");
+    console.log("   OK 零知识: 证明不泄露私有输入信息");
+    console.log("   OK 非交互: 无需证明者和验证者交互");
+    console.log("   OK 简洁性: 证明大小恒定，验证快速");
     console.log();
 
     console.log("9. 性能指标");
@@ -87,11 +87,11 @@ async function generateExperimentReport() {
     console.log();
 
     console.log("10. 应用场景");
-    console.log("    ✓ 隐私保护认证系统");
-    console.log("    ✓ 零知识身份验证");
-    console.log("    ✓ 区块链隐私协议");
-    console.log("    ✓ 匿名投票系统");
-    console.log("    ✓ 机密审计");
+    console.log("    OK 隐私保护认证系统");
+    console.log("    OK 零知识身份验证");
+    console.log("    OK 区块链隐私协议");
+    console.log("    OK 匿名投票系统");
+    console.log("    OK 机密审计");
     console.log();
 
     console.log("11. 实验总结");
@@ -102,7 +102,7 @@ async function generateExperimentReport() {
     console.log();
 
     console.log("=".repeat(80));
-    console.log("                    实验完成 ✓");
+    console.log("                    实验完成 OK");
     console.log("=".repeat(80));
 
     // 生成实验报告文件
