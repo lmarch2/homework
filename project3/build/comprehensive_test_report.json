@@ -1,0 +1,51 @@
+{
+  "timestamp": "2025-08-07T07:04:49.990Z",
+  "summary": {
+    "total_tests": 5,
+    "passed_tests": 5,
+    "failed_tests": 0,
+    "success_rate": "100.0%"
+  },
+  "hash_uniqueness": {
+    "total_hashes": 5,
+    "unique_hashes": 5,
+    "uniqueness_check": true
+  },
+  "test_results": [
+    {
+      "testCase": 1,
+      "description": "零值测试",
+      "input": 0,
+      "hash": "20494129443602848678221837396214638521787470948383441422032891971057025688446",
+      "verification": true
+    },
+    {
+      "testCase": 2,
+      "description": "单位值测试",
+      "input": 1,
+      "hash": "9054275396596867406088262571755139327178147504922609090580789784689679026528",
+      "verification": true
+    },
+    {
+      "testCase": 3,
+      "description": "已验证案例",
+      "input": 42,
+      "hash": "12734957036258313384458817466501339664620251908681212896654508210380655274248",
+      "verification": true
+    },
+    {
+      "testCase": 4,
+      "description": "大数值测试",
+      "input": 123456789,
+      "hash": "16935089081261397997616094070586404439723755878200754626357715940000197430169",
+      "verification": true
+    },
+    {
+      "testCase": 5,
+      "description": "边界值测试",
+      "input": 999999999,
+      "hash": "6921401455635275789943593412851852949098414855114078140228902430449325706209",
+      "verification": true
+    }
+  ]
+}

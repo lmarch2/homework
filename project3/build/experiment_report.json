@@ -1,0 +1,43 @@
+{
+  "experiment": "Poseidon2 Zero-Knowledge Proof Implementation",
+  "timestamp": "2025-08-07T07:03:04.359Z",
+  "parameters": {
+    "algorithm": "Poseidon2",
+    "security_level": 256,
+    "state_size": 3,
+    "sbox_degree": 5,
+    "full_rounds": 8,
+    "partial_rounds": 57,
+    "field": "bn128"
+  },
+  "proof_system": "Groth16",
+  "input": {
+    "preimage": 42
+  },
+  "public_output": [
+    "12734957036258313384458817466501339664620251908681212896654508210380655274248"
+  ],
+  "proof_verification": "PASSED",
+  "circuit_stats": {
+    "constraints": 860,
+    "non_linear": 585,
+    "linear": 275,
+    "wires": 862,
+    "templates": 69
+  },
+  "files_generated": {
+    "r1cs": "poseidon2_hash.r1cs",
+    "wasm": "poseidon2_hash.wasm",
+    "zkey": "poseidon2_hash_final.zkey",
+    "vkey": "verification_key.json",
+    "proof": "proof.json",
+    "witness": "witness.wtns"
+  },
+  "conclusions": [
+    "Circuit compilation successful",
+    "Witness generation working correctly",
+    "Proof generation completed",
+    "Proof verification passed",
+    "All requirements fulfilled"
+  ]
+}
