@@ -7,7 +7,8 @@
 #define SM3_DIGEST_SIZE 32
 #define SM3_BLOCK_SIZE 64
 
-typedef struct {
+typedef struct
+{
     uint32_t state[8];
     uint64_t count;
     uint8_t buffer[SM3_BLOCK_SIZE];
@@ -31,21 +32,29 @@ int sm3_length_extension_attack(const uint8_t *original_hash,
                                uint8_t **extended_message,
                                size_t *extended_len);
 
+int verify_length_extension_attack(const char *secret, 
+                                   const char *original_msg,
+                                   const char *append_msg);
+
 #define ROTL(x, n) (((x) << (n)) | ((x) >> (32 - (n))))
 
-static inline uint32_t P0(uint32_t x) {
+static inline uint32_t P0(uint32_t x)
+{
     return x ^ ROTL(x, 9) ^ ROTL(x, 17);
 }
 
-static inline uint32_t P1(uint32_t x) {
+static inline uint32_t P1(uint32_t x)
+{
     return x ^ ROTL(x, 15) ^ ROTL(x, 23);
 }
 
-static inline uint32_t FF(uint32_t x, uint32_t y, uint32_t z, int j) {
+static inline uint32_t FF(uint32_t x, uint32_t y, uint32_t z, int j)
+{
     return (j <= 15) ? (x ^ y ^ z) : ((x & y) | (x & z) | (y & z));
 }
 
-static inline uint32_t GG(uint32_t x, uint32_t y, uint32_t z, int j) {
+static inline uint32_t GG(uint32_t x, uint32_t y, uint32_t z, int j)
+{
     return (j <= 15) ? (x ^ y ^ z) : ((x & y) | (~x & z));
 }
 

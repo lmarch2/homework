@@ -15,21 +15,8 @@ merkle_tree_t* merkle_tree_create(void) {
     return tree;
 }
 
-void merkle_node_destroy(merkle_node_t *node) {
-    if (!node) return;
-    
-    if (!node->is_leaf) {
-        merkle_node_destroy(node->left);
-        merkle_node_destroy(node->right);
-    }
-    
-    free(node);
-}
-
 void merkle_tree_destroy(merkle_tree_t *tree) {
     if (!tree) return;
-    
-    merkle_node_destroy(tree->root);
     
     if (tree->leaves) {
         for (uint64_t i = 0; i < tree->leaf_count; i++) {
@@ -81,100 +68,89 @@ int merkle_tree_add_leaf(merkle_tree_t *tree, const uint8_t *data, size_t len) {
     return 0;
 }
 
-static merkle_node_t* build_tree_recursive(uint8_t **leaves, size_t *leaf_sizes, 
-                                          uint64_t start, uint64_t end) {
-    if (start >= end) return NULL;
-    
-    merkle_node_t *node = malloc(sizeof(merkle_node_t));
-    if (!node) return NULL;
-    
-    if (start + 1 == end) {
-        node->is_leaf = 1;
-        node->left = NULL;
-        node->right = NULL;
-        merkle_compute_leaf_hash(leaves[start], leaf_sizes[start], node->hash);
-        return node;
+static void compute_tree_hashes(uint8_t **leaf_hashes, uint64_t n, uint8_t *result) {
+    if (n == 0) {
+        sm3_hash(NULL, 0, result);
+        return;
     }
     
-    node->is_leaf = 0;
+    if (n == 1) {
+        memcpy(result, leaf_hashes[0], MERKLE_NODE_SIZE);
+        return;
+    }
+    
     uint64_t k = 1;
-    while (k < (end - start)) k <<= 1;
+    while (k < n) k <<= 1;
     k >>= 1;
     
-    uint64_t mid = start + k;
-    if (mid > end) mid = end;
+    uint8_t left_hash[MERKLE_NODE_SIZE];
+    uint8_t right_hash[MERKLE_NODE_SIZE];
     
-    node->left = build_tree_recursive(leaves, leaf_sizes, start, mid);
-    node->right = build_tree_recursive(leaves, leaf_sizes, mid, end);
+    compute_tree_hashes(leaf_hashes, k, left_hash);
+    compute_tree_hashes(leaf_hashes + k, n - k, right_hash);
     
-    if (!node->left && !node->right) {
-        free(node);
-        return NULL;
-    }
-    
-    if (!node->right) {
-        memcpy(node->hash, node->left->hash, MERKLE_NODE_SIZE);
-    } else if (!node->left) {
-        memcpy(node->hash, node->right->hash, MERKLE_NODE_SIZE);
-    } else {
-        merkle_compute_internal_hash(node->left->hash, node->right->hash, node->hash);
-    }
-    
-    return node;
+    merkle_compute_internal_hash(left_hash, right_hash, result);
 }
 
 int merkle_tree_build(merkle_tree_t *tree) {
     if (!tree || tree->leaf_count == 0) return -1;
     
-    if (tree->root) {
-        merkle_node_destroy(tree->root);
+    uint8_t **leaf_hashes = malloc(tree->leaf_count * sizeof(uint8_t*));
+    if (!leaf_hashes) return -1;
+    
+    for (uint64_t i = 0; i < tree->leaf_count; i++) {
+        leaf_hashes[i] = malloc(MERKLE_NODE_SIZE);
+        if (!leaf_hashes[i]) {
+            for (uint64_t j = 0; j < i; j++) free(leaf_hashes[j]);
+            free(leaf_hashes);
+            return -1;
+        }
+        merkle_compute_leaf_hash(tree->leaves[i], tree->leaf_sizes[i], leaf_hashes[i]);
     }
     
-    if (tree->leaf_count == 1) {
-        tree->root = malloc(sizeof(merkle_node_t));
-        if (!tree->root) return -1;
-        
-        tree->root->is_leaf = 1;
-        tree->root->left = NULL;
-        tree->root->right = NULL;
-        merkle_compute_leaf_hash(tree->leaves[0], tree->leaf_sizes[0], tree->root->hash);
-        return 0;
+    tree->root = malloc(sizeof(merkle_node_t));
+    if (!tree->root) {
+        for (uint64_t i = 0; i < tree->leaf_count; i++) free(leaf_hashes[i]);
+        free(leaf_hashes);
+        return -1;
     }
     
-    tree->root = build_tree_recursive(tree->leaves, tree->leaf_sizes, 0, tree->leaf_count);
-    return tree->root ? 0 : -1;
+    tree->root->left = NULL;
+    tree->root->right = NULL;
+    tree->root->is_leaf = 0;
+    
+    compute_tree_hashes(leaf_hashes, tree->leaf_count, tree->root->hash);
+    
+    for (uint64_t i = 0; i < tree->leaf_count; i++) free(leaf_hashes[i]);
+    free(leaf_hashes);
+    
+    return 0;
 }
 
-static int generate_audit_path_recursive(merkle_node_t *node, uint64_t target_index,
-                                        uint64_t start, uint64_t end, 
-                                        audit_proof_t *proof) {
-    if (!node || start >= end) return -1;
-    
-    if (node->is_leaf) {
-        return (start == target_index) ? 0 : -1;
-    }
+static void audit_path_recursive(uint8_t **leaf_hashes, uint64_t n, uint64_t m, 
+                                 audit_proof_t *proof) {
+    if (n == 1) return;
     
     uint64_t k = 1;
-    while (k < (end - start)) k <<= 1;
+    while (k < n) k <<= 1;
     k >>= 1;
     
-    uint64_t mid = start + k;
-    if (mid > end) mid = end;
-    
-    if (target_index < mid) {
-        int result = generate_audit_path_recursive(node->left, target_index, start, mid, proof);
-        if (result == 0 && node->right && proof->path_len < MAX_AUDIT_PATH) {
-            memcpy(proof->path[proof->path_len], node->right->hash, MERKLE_NODE_SIZE);
+    if (m < k) {
+        uint8_t right_hash[MERKLE_NODE_SIZE];
+        compute_tree_hashes(leaf_hashes + k, n - k, right_hash);
+        if (proof->path_len < MAX_AUDIT_PATH) {
+            memcpy(proof->path[proof->path_len], right_hash, MERKLE_NODE_SIZE);
             proof->path_len++;
         }
-        return result;
+        audit_path_recursive(leaf_hashes, k, m, proof);
     } else {
-        int result = generate_audit_path_recursive(node->right, target_index, mid, end, proof);
-        if (result == 0 && node->left && proof->path_len < MAX_AUDIT_PATH) {
-            memcpy(proof->path[proof->path_len], node->left->hash, MERKLE_NODE_SIZE);
+        uint8_t left_hash[MERKLE_NODE_SIZE];
+        compute_tree_hashes(leaf_hashes, k, left_hash);
+        if (proof->path_len < MAX_AUDIT_PATH) {
+            memcpy(proof->path[proof->path_len], left_hash, MERKLE_NODE_SIZE);
             proof->path_len++;
         }
-        return result;
+        audit_path_recursive(leaf_hashes + k, n - k, m - k, proof);
     }
 }
 
@@ -184,11 +160,27 @@ int merkle_generate_audit_proof(merkle_tree_t *tree, uint64_t leaf_index, audit_
     proof->path_len = 0;
     proof->leaf_index = leaf_index;
     
-    if (tree->leaf_count == 1) {
-        return 0;
+    if (tree->leaf_count == 1) return 0;
+    
+    uint8_t **leaf_hashes = malloc(tree->leaf_count * sizeof(uint8_t*));
+    if (!leaf_hashes) return -1;
+    
+    for (uint64_t i = 0; i < tree->leaf_count; i++) {
+        leaf_hashes[i] = malloc(MERKLE_NODE_SIZE);
+        if (!leaf_hashes[i]) {
+            for (uint64_t j = 0; j < i; j++) free(leaf_hashes[j]);
+            free(leaf_hashes);
+            return -1;
+        }
+        merkle_compute_leaf_hash(tree->leaves[i], tree->leaf_sizes[i], leaf_hashes[i]);
     }
     
-    return generate_audit_path_recursive(tree->root, leaf_index, 0, tree->leaf_count, proof);
+    audit_path_recursive(leaf_hashes, tree->leaf_count, leaf_index, proof);
+    
+    for (uint64_t i = 0; i < tree->leaf_count; i++) free(leaf_hashes[i]);
+    free(leaf_hashes);
+    
+    return 0;
 }
 
 int merkle_verify_audit_proof(const audit_proof_t *proof, const uint8_t *leaf_hash, 
