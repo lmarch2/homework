@@ -1,0 +1,30 @@
+{
+  "name": "project3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/poseidon2_test.js",
+    "compile": "circom circuits/poseidon2_hash.circom --r1cs --wasm --sym -o build/",
+    "generate-proof": "node scripts/generate_proof.js",
+    "setup": "npm install && npm run compile"
+  },
+  "keywords": [
+    "circom",
+    "poseidon2",
+    "zero-knowledge",
+    "groth16"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "Poseidon2 hash function implementation in Circom with Groth16 proofs",
+  "dependencies": {
+    "circom_tester": "^0.0.24",
+    "circomlibjs": "^0.1.7",
+    "ffjavascript": "^0.3.1",
+    "snarkjs": "^0.7.5"
+  },
+  "devDependencies": {
+    "chai": "^5.2.1",
+    "mocha": "^11.7.1"
+  }
+}
