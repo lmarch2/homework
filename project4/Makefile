@@ -19,6 +19,9 @@ TESTS = $(BINDIR)/test_sm3_basic $(BINDIR)/test_sm3_opt $(BINDIR)/test_sm3_agg \
         $(BINDIR)/test_attack_basic $(BINDIR)/test_attack_opt $(BINDIR)/test_attack_agg \
         $(BINDIR)/test_merkle_basic $(BINDIR)/test_merkle_opt $(BINDIR)/test_merkle_agg
 
+# 新增的便捷目标
+.PHONY: demo test_sm3 test_length test_merkle benchmark
+
 BENCHMARKS = $(BINDIR)/performance_basic $(BINDIR)/performance_opt $(BINDIR)/performance_agg
 
 .PHONY: all clean test benchmark setup
@@ -165,5 +168,24 @@ help:
 	@echo "  benchmark-*   - Run specific optimization level benchmark"
 	@echo "  quick-test    - Run optimized tests only"
 	@echo "  compare       - Compare all optimization levels"
+	@echo "  demo          - Build and run main demonstration"
+	@echo "  test_sm3      - Build and run SM3 tests"
+	@echo "  test_length   - Build and run length extension tests"
+	@echo "  test_merkle   - Build and run Merkle tree tests"
+
+# 便捷目标
+demo: $(BINDIR)/project_demo
+
+test_sm3: $(BINDIR)/test_sm3_opt
+	./$(BINDIR)/test_sm3_opt
+
+test_length: $(BINDIR)/test_attack_opt  
+	./$(BINDIR)/test_attack_opt
+
+test_merkle: $(BINDIR)/test_merkle_opt
+	./$(BINDIR)/test_merkle_opt
+
+$(BINDIR)/project_demo: $(TESTDIR)/project_demo.c $(SRCDIR)/sm3_basic.c | $(BINDIR)
+	$(CC) $(OPTIMIZED_CFLAGS) -o $@ $^ -lm
 	@echo "  clean         - Remove build artifacts"
 	@echo "  help          - Show this help message"

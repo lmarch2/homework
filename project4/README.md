@@ -207,7 +207,7 @@ MTH(left, right) = SM3(0x01 || left || right)
   MTH(D[n]) = SM3(0x01 || MTH(D[0:k]) || MTH(D[k:n]))
   ```
 
-### 2. 存在性证明（Inclusion Proof）
+### 2. 存在性证明
 
 #### 2.1 审计路径
 
@@ -222,43 +222,13 @@ MTH(left, right) = SM3(0x01 || left || right)
 
 验证者使用审计路径重新计算根杂凑值，与已知的根进行比较。
 
-### 3. 一致性证明（Consistency Proof）
+### 3. 一致性证明
 
 一致性证明用于验证树的append-only属性，即新树包含旧树的所有元素。
 
 对于大小为`m`的旧树和大小为`n`的新树（`m < n`），一致性证明`PROOF(m, D[n])`包含验证两个根杂凑值一致性所需的最小节点集合。
 
-## 实现方案
-
-### 1. 模块结构
-
-```
-src/
-├── sm3_basic.c         # 基础SM3实现
-├── sm3_optimized.c     # 优化版SM3实现
-├── length_extension.c  # 长度扩展攻击实现
-├── merkle_tree.c      # Merkle树实现
-├── sm3.h              # SM3算法头文件
-└── merkle.h           # Merkle树头文件
-
-tests/
-├── test_sm3.c         # SM3算法测试
-├── test_attack.c      # 长度扩展攻击测试
-└── test_merkle.c      # Merkle树测试
-
-benchmark/
-└── performance.c      # 性能测试程序
-```
-
-### 2. 编译配置
-
-使用不同的编译选项测试性能差异：
-- `-O0`：无优化基准测试
-- `-O2`：标准优化
-- `-O3 -march=native`：最高优化
-- `-O3 -march=native -funroll-loops`：循环展开优化
-
-## 实验设计与结果
+## 实验设计
 
 ### 1. SM3性能测试
 
@@ -318,7 +288,7 @@ benchmark/
 
 **防护方案**: 使用HMAC结构 `SM3(key || SM3(key || message))` 可有效防止此类攻击。
 
-### 3. Merkle树大规模测试
+### 3. Merkle树测试
 
 #### 3.1 100,000叶子节点测试结果
 
@@ -365,52 +335,66 @@ benchmark/
 - 根哈希验证: 通过RFC6962算法计算正确
 ```
 
-### 4. 功能完整性验证
+### 4. 功能验证测试
 
-#### 4.1 SM3标准符合性
-- 通过标准测试向量验证
-- 空消息哈希值正确
-- 边界条件处理正确
-- 大消息处理正常
+#### 4.1 SM3标准符合性测试
+```bash
+测试用例1 - 空消息:
+输入: ""
+期望: 1ab21d8355cfa17f8e61194831e81a8f22bec8c728fefb747ed035eb5082aa2b
+实际: 1ab21d8355cfa17f8e61194831e81a8f22bec8c728fefb747ed035eb5082aa2b
+结果: 通过
 
-#### 4.2 Merkle树功能完整性
-- 基本树构建: ✓
-- 审计证明生成: ✓  
-- 证明验证: ✓
-- 一致性证明: ✓
-- 大规模处理: ✓
+测试用例2 - 标准测试向量:
+输入: "abc"
+期望: 66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0
+实际: 66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0
+结果: 通过
 
-#### 4.3 长度扩展攻击完整性
-- 攻击原理演示: ✓
-- MAC绕过验证: ✓
-- 防护方案测试: ✓
+边界测试: 55字节、56字节、64字节消息全部测试通过
+大消息测试: 1MB数据块哈希计算正常，耗时5.01ms
+```
 
-## 技术总结
+#### 4.2 Merkle树实际测试数据
+```bash
+3叶子树测试:
+- 构建时间: 0.001ms
+- 叶子0审计证明: 2个哈希值, 验证通过
+- 叶子1审计证明: 2个哈希值, 验证通过  
+- 叶子2审计证明: 1个哈希值, 验证通过
 
-### 1. 优化技术应用
-本项目在SM3实现中应用了多种软件优化技术：
+100,000叶子树测试:
+- 构建时间: 39ms
+- 随机叶子审计证明: 17个哈希值, 验证通过
+- 内存占用: 3.1MB
+- 证明验证时间: <0.1ms
 
-1. **编译器优化**: 通过-O3和-march=native获得41.6%性能提升
-2. **循环展开**: 在消息扩展和压缩函数中减少分支开销
-3. **内存访问优化**: 优化数据结构布局提高缓存命中率
-4. **算法级优化**: 预计算常量、内联函数等
+不平衡树处理:
+- 15叶子树的叶子14: 证明长度4, 验证正确
+- 1000叶子树边界测试: 全部通过
+```
 
-### 2. 安全性分析
+#### 4.3 长度扩展攻击实际效果
+```bash
+攻击场景测试:
+原始消息: "user=alice&balance=1000&admin=false"
+原始MAC: 441c9c5a3e0c911793f224dcdf91bb7a...
+
+扩展攻击:
+扩展消息: "...&admin=true"  
+伪造MAC: 06849d3081f68163c7c3b6243c77a79d...
+验证结果: 攻击成功，身份验证被绕过
+
+HMAC防护测试:
+使用HMAC-SM3: 长度扩展攻击失败
+防护有效性: 100%阻止攻击
+```
+
+
+### 安全性分析
 1. **长度扩展攻击**: 验证了SM3在MAC应用中的安全缺陷
 2. **防护措施**: 提出并验证了HMAC等防护方案
 3. **安全编程**: 实现了常量时间操作避免时序攻击
-
-### 3. 工程实践价值
-1. **标准兼容**: 严格按照GM/T 0004-2012和RFC6962实现
-2. **可扩展性**: 支持10万+节点的大规模应用
-3. **工程质量**: 完整的错误处理和内存管理
-
-### 4. 应用前景
-本项目实现可直接应用于：
-- 区块链系统的哈希计算和Merkle证明
-- 数字证书透明度系统
-- 分布式系统的数据完整性验证
-- 密码学协议的基础组件
 
 实验结果表明，通过系统性的软件优化，SM3算法性能得到显著提升，同时Merkle树实现达到了工业级应用的性能要求。
 
@@ -419,3 +403,72 @@ benchmark/
 1. GM/T 0004-2012 SM3密码杂凑算法
 2. RFC 6962 - Certificate Transparency
 3. 付勇老师课程PPT - SM3算法优化技术
+
+## 总结
+
+### 任务A: SM3算法实现与优化
+- `src/sm3_basic.c`, `src/sm3_optimized.c`符合GM/T 0004-2012标准，平均200MB/s处理速度。循环展开、寄存器优化、编译器优化
+
+### 任务B: 长度扩展攻击验证  
+- `src/length_extension.c`利用Merkle-Damgård构造弱点实现攻击，使用HMAC代替简单连接
+
+### 任务C: 大规模Merkle树实现
+- `src/merkle_tree.c` 支持100,000个叶节点，符合RFC6962标准。构建时间0.039秒，254万次哈希/秒
+
+## 项目结构
+
+```
+project4/
+├── README.md              # 项目文档和报告
+├── Makefile              # 构建配置
+├── src/                  # 源代码目录
+│   ├── sm3.h            # SM3算法头文件
+│   ├── sm3_basic.c      # SM3基础实现
+│   ├── sm3_optimized.c  # SM3优化实现
+│   ├── length_extension.c # 长度扩展攻击
+│   ├── merkle_tree.c    # Merkle树实现
+│   └── merkle.h         # Merkle树头文件
+├── tests/               # 测试程序目录
+│   ├── test_sm3.c       # SM3测试程序
+│   ├── test_length_ext.c # 长度扩展测试
+│   ├── test_merkle.c    # Merkle树测试
+│   ├── project_demo.c   # 完整功能演示
+│   └── ...              # 其他调试测试文件
+├── bin/                 # 二进制文件目录
+│   ├── project_demo     # 主要演示程序
+│   ├── test_sm3         # 各种测试程序
+│   └── ...              
+└── benchmark/           # 性能测试目录
+    └── performance_test.c # 性能基准测试
+```
+
+## 快速运行
+
+### 完整功能演示
+```bash
+cd project4/
+make demo  # 或者: gcc -o bin/project_demo tests/project_demo.c src/sm3_basic.c -lm -O2
+./bin/project_demo
+```
+
+### 功能测试
+```bash
+# SM3算法测试
+make test_sm3
+./bin/test_sm3
+
+# 长度扩展攻击测试  
+make test_length
+./bin/test_length
+
+# Merkle树测试
+make test_merkle
+./bin/test_merkle
+```
+
+### 性能测试
+```bash
+make benchmark
+./bin/performance_test
+```
+
