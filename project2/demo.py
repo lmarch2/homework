@@ -1,12 +1,4 @@
 #!/usr/bin/env python3
-"""
-数字水印系统演示脚本
-快速演示水印嵌入、提取和鲁棒性测试
-
-@author: Homework Project 2
-@date: 2025-08-06
-"""
-
 import sys
 import os
 import cv2

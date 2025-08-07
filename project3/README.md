@@ -6,6 +6,50 @@
 
 本实现使用简化的MDS矩阵和轮常数以便于理解和测试。生产环境中应使用Poseidon2标准中指定的实际参数。
 
+## 快速开始
+
+### 环境要求
+
+- Node.js (版本 14 或更高)
+- npm 或 yarn
+
+### 安装依赖
+
+```bash
+npm install
+```
+
+### 基本操作
+
+1. **编译电路**：
+```bash
+circom circuits/poseidon2_hash.circom --r1cs --wasm --sym -o build/
+```
+
+2. **运行基础测试**：
+```bash
+node test/simple_test.cjs
+```
+
+3. **运行完整测试套件**：
+```bash
+node test/poseidon2_test.js
+```
+
+4. **生成和验证证明**：
+```bash
+node scripts/generate_proof.cjs
+```
+
+5. **运行性能测试**：
+```bash
+node scripts/benchmark.cjs
+```
+
+6. **完整实验流程**：
+```bash
+node scripts/complete_experiment.cjs
+```
 ## 数学背景与算法原理
 
 ### Poseidon2哈希函数

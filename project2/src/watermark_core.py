@@ -1,11 +1,3 @@
-"""
-数字水印核心算法实现
-基于DCT变换的鲁棒性水印嵌入和提取
-
-@author: Homework Project 2
-@date: 2025-08-06
-"""
-
 import numpy as np
 import cv2
 from scipy.fftpack import dct, idct

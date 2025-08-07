@@ -1,12 +1,4 @@
 #!/usr/bin/env python3
-"""
-数字水印系统主程序
-提供命令行接口用于水印嵌入、提取和测试
-
-@author: Homework Project 2
-@date: 2025-08-06
-"""
-
 import argparse
 import cv2
 import json

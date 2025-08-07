@@ -1,10 +1,3 @@
-"""
-数字水印鲁棒性测试模块
-实现各种图像攻击以测试水印的鲁棒性
-
-@author: Homework Project 2
-@date: 2025-08-06
-"""
 
 import numpy as np
 import cv2

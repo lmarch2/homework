@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-详细调试脚本
-"""
-
 import sys
 import os
 import cv2

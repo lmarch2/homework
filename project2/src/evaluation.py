@@ -1,10 +1,3 @@
-"""
-数字水印实验评估模块
-用于系统性地评估水印算法的性能
-
-@author: Homework Project 2
-@date: 2025-08-06
-"""
 
 import numpy as np
 import cv2

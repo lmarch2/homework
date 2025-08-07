@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-简化的水印测试脚本，用于调试
-"""
-
 import sys
 import os
 import cv2

@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-运行完整实验并收集数据
-"""
-
 import sys
 import os
 import cv2
