@@ -10,6 +10,7 @@ sys.path.append(os.path.dirname(__file__))
 from sm2.sm2 import keygen, sm2_sign, sm2_verify
 from experiments.demo_reuse_k import main as demo_reuse_k
 from experiments.demo_omit_ZA import main as demo_omit_ZA
+from experiments.demo_k_mode_compare import main as demo_k_mode
 
 
 def basic_correctness_and_perf():
@@ -35,6 +36,9 @@ def main():
 
     print("\n== Experiment C: omit ZA ==")
     demo_omit_ZA()
+
+    print("\n== Experiment D: deterministic k vs random k ==")
+    demo_k_mode()
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Tuple
+from typing import Tuple, Literal
 
 from .curve import CURVE, G, Point, scalar_mul, point_add
 from .util import random_scalar
@@ -32,12 +32,34 @@ def encode_ZA(ID: bytes, Px: int, Py: int) -> bytes:
     return sm3_hash(ENTL + ID + a + b + gx + gy + px + py)
 
 
-def sm2_sign(msg: bytes, ID: bytes, kp: KeyPair, k_fixed: int | None = None) -> Tuple[int, int]:
+def _deterministic_k(d: int, e: int, n: int) -> int:
+    # Simple SM3-based determinstic k: k = SM3(d||e||ctr) mod n, ctr from 1.. until valid
+    d_bytes = d.to_bytes(32, 'big')
+    e_bytes = e.to_bytes(32, 'big')
+    ctr = 1
+    while True:
+        h = sm3_hash(d_bytes + e_bytes + ctr.to_bytes(4, 'big'))
+        k = int.from_bytes(h, 'big') % n
+        if 1 <= k < n:
+            return k
+        ctr += 1
+
+
+def sm2_sign(
+    msg: bytes,
+    ID: bytes,
+    kp: KeyPair,
+    k_fixed: int | None = None,
+    k_mode: Literal['random', 'deterministic'] = 'random',
+) -> Tuple[int, int]:
     ZA = encode_ZA(ID, kp.Px, kp.Py)
     e = int.from_bytes(sm3_hash(ZA + msg), 'big')
     n = CURVE.n
     while True:
-        k = k_fixed if k_fixed is not None else random_scalar(n)
+        if k_fixed is not None:
+            k = k_fixed
+        else:
+            k = random_scalar(n) if k_mode == 'random' else _deterministic_k(kp.d, e, n)
         P1 = scalar_mul(k, G)
         r = (e + P1.x) % n
         if r == 0 or (r + k) % n == 0:
@@ -70,11 +92,19 @@ def sm2_verify(msg: bytes, ID: bytes, Px: int, Py: int, sig: Tuple[int, int]) ->
 
 
 # variant without ZA (misuse intentionally for experiment)
-def sm2_sign_without_ZA(msg: bytes, kp: KeyPair, k_fixed: int | None = None) -> Tuple[int, int]:
+def sm2_sign_without_ZA(
+    msg: bytes,
+    kp: KeyPair,
+    k_fixed: int | None = None,
+    k_mode: Literal['random', 'deterministic'] = 'random',
+) -> Tuple[int, int]:
     e = int.from_bytes(sm3_hash(msg), 'big')
     n = CURVE.n
     while True:
-        k = k_fixed if k_fixed is not None else random_scalar(n)
+        if k_fixed is not None:
+            k = k_fixed
+        else:
+            k = random_scalar(n) if k_mode == 'random' else _deterministic_k(kp.d, e, n)
         P1 = scalar_mul(k, G)
         r = (e + P1.x) % n
         if r == 0 or (r + k) % n == 0:
