@@ -88,6 +88,7 @@ SM2 规定 e = SM3(ZA || M)，其中 ZA 与用户身份 ID 强绑定。若错误
 - 重复 k PoC：
   - 两条消息在固定 k 下签名，利用公式 d ≡ (s2−s1)·((s1+r1)−(s2+r2))^{-1} (mod n) 成功恢复私钥，恢复值与真实 d 完全一致。
   - 使用恢复出的 d 对“我是中本聪”消息签名，验签通过，证明可伪造签名。
+  - 说明：这里的“伪造中本聪的数字签名”仅指在练习环境中，攻击者通过误用（重复 k）恢复出对应密钥后，能够对任意语义的消息进行签名的能力展示。
 - 省略 ZA 对比：
   - 正确实现（含 ZA）下，更换 ID 验证失败；错误实现（省略 ZA）下，同一签名对不同 ID 仍然通过，体现身份绑定缺失的风险。
 
@@ -111,3 +112,10 @@ python3 project5/experiments/demo_omit_ZA.py
 ```
 
 环境依赖：仅 Python 3.8+，无第三方包。
+
+## 参考资料
+
+- 国家密码管理局公告：《SM2 椭圆曲线公钥密码算法》与《推荐曲线参数》
+  - https://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
+- IETF Internet-Draft: SM2 Digital Signature Algorithm (工作草案，包含 ZA 与签名/验签流程的英文描述)
+  - https://datatracker.ietf.org/doc/html/draft-shen-sm2-ecdsa-02
