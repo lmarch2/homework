@@ -1,46 +1,61 @@
-# Project 6: Google Password Checkup 协议实现与验证（基于 OPRF + Bloom Filter）
+# Project 6: Google Password Checkup（OPRF + Bloom Filter）
 
-本项目参考 Google Password Checkup 相关公开资料与协议思路，结合文献中常见的 OPRF（Oblivious PRF）+ 分桶 Bloom Filter 的私有集合成员查询（Private Set Membership, PSM）设计，复现实验级实现。整体目标是：客户端在不暴露明文口令的前提下，查询该口令是否出现在服务端的泄露口令集合中；服务端也不应获知客户端具体查询的口令。
+目标：在不泄露客户端口令的前提下，查询其是否出现在服务端的泄露口令集合中；服务端不获知客户端明文。实现采用两轮 OPRF + 分桶 Bloom 的私有集合成员查询（PSM）模式。
 
-说明：部分讲稿或资料会以“Figure 2 协议交互图”形式展示该类两轮 OPRF 方案。本文档先给出数学定义与推导，再给出实现与实验设计。代码与报告均在本目录下，语言采用 Python，依赖标准库即可运行。
+## 协议概述
 
-## 协议与数学推导
+- 群与 OPRF：使用 RFC 3526 的 1536-bit safe prime 群（p=2q+1）。Hash-to-Group：H1(x)=(g^e)^2 mod p，其中 e=SHA-256(x) mod q。服务器密钥 k∈Z_q^*。
+- 两轮交互：
+  - 客户端盲化 M=H1(x)^r，发送 (bucket_prefix, M)。
+  - 服务器返回 N=M^k 及该桶的 Bloom 过滤器。
+  - 客户端去盲 Z=N^{r^{-1}}=H1(x)^k，计算 y=H2(Z)，在 Bloom 中查询成员关系。
+- 正确性：N=(H1(x)^r)^k，去盲得 H1(x)^k；Bloom 负责集合查询，存在可调 FPR。
+- 安全性：本实现未包含 DLEQ 同钥证明；工程上建议使用曲线型 OPRF/VOPRF 与证明以防不诚实服务器。Bloom 误报须通过参数控制。
 
-为便于自包含实现，我们采用一个 1536-bit 安全素数群（safe prime group，RFC 3526 群参数）上的 Diffie-Hellman 风格 OPRF（非生产级工程实现）。核心思路与椭圆曲线上的 2HashDH OPRF 类似：
+## 目录
 
-- 群参数：选取素数 p，使得 p = 2q + 1，q 为素数；选择生成元 g ∈ QR_p（平方剩余子群），其阶为 q。我们通过将 g 平方化或对 Hash 到群的元素再次平方来确保元素落在阶为 q 的子群内。
-- Hash 到群：对于字节串 x，计算 e = H(x) mod q，然后取 H1(x) = (g^e)^2 mod p 作为群元素（落在 QR_p）。
-- 服务器 OPRF 秘钥：k ∈ Z_q^*。
-- 客户端盲化：选取 r ∈ Z_q^*，计算 M = H1(x)^r（盲化查询），发送 M 给服务器；同时发送一个分桶索引 prefix（见后述分桶 Bloom）。
-- 服务器评估：返回 N = M^k = H1(x)^{rk}，并附带对应桶的 Bloom 过滤器（序列化后的位图与参数）。
-- 客户端去盲：计算 r 的乘法逆元 r^{-1} mod q，得到 Z = N^{r^{-1}} = H1(x)^k。
-- 伪随机化与查询：计算 y = H2(Z)（例如对 Z 的字节编码做 SHA-256），在收到的 Bloom 过滤器中查询 y 是否存在；若存在则判定“疑似泄露”，否则判定“不在泄露集合中”。
-
-上述过程保证：
-- 服务器仅见到盲化后的群元素 M，看不到 x；
-- 客户端仅得到对 x 的 PRF 输出 H1(x)^k 的哈希，无法恢复 k；
-- 利用分桶（prefix）与 Bloom 过滤器，避免传输整个泄露集合数据；prefix 来源于对 x 的某个稳定哈希前缀（如 SHA-256 的前 b 位），客户端发送该前缀，服务器只返回该桶的 Bloom 过滤器，降低通信。
-
-### 安全性与工程注意
-- 这是教学实验实现，使用了整数模素数群与简单的 Hash-to-Group 映射。工程中更推荐椭圆曲线（如 P-256 或 Ristretto255）上的标准化 OPRF/VOPRF 实现与 DLEQ 证明等，确保同钥一致性与抗枚举。
-- Bloom 过滤器存在可控的误报率（FPR）。实验中会给出理论 FPR 与实测 FPR 对比。
-
-## 实现结构
-
-- `src/oprf_group.py`：群参数、随机数、Hash 到群、盲化与去盲相关基础函数。
-- `src/bloom.py`：简易 Bloom 过滤器实现，支持序列化与反序列化。
-- `src/server.py`：服务端实现，加载或生成泄露口令集合，分桶构建 Bloom 过滤器，处理客户端盲化查询并返回对应桶。
-- `src/client.py`：客户端实现，完成盲化、去盲和分桶查询逻辑。
-- `src/protocol.py`：协议组合与演示函数。
-- `run_demo.py`：最小演示脚本（本地同进程的 client/server 交互）。
-- `experiments.py`：实验脚本，生成合成泄露集，跑大量查询，评估 FPR/TPR、通信大小与耗时。
+project6/
+├── README.md
+├── __init__.py
+├── experiments.py
+├── run_demo.py
+└── src
+    ├── __init__.py
+    ├── bloom.py
+    ├── client.py
+    ├── oprf_group.py
+    ├── protocol.py
+    └── server.py
 
 本实现仅使用 Python 标准库，无第三方依赖。
 
 ## 快速开始
+运行环境：Python 3（标准库即可）。在仓库根目录执行以下命令。
 
-- 运行最小示例：
-  - 演示会用一个小的泄露口令集合（内含常见口令），对若干口令进行查询并打印结果。
+```zsh
+# 运行最小演示（同进程 client/server，打印查询结果）
+python3 project6/run_demo.py
+
+# 运行实验（合成数据，输出 TPR/FPR、平均耗时、平均桶大小）
+python3 project6/experiments.py
+```
+
+可调参数（直接在脚本内修改）：
+- 在 `run_demo.py` 与 `experiments.py` 中，`Protocol.setup(..., b_bits=12, target_fpr=1e-4)` 可调整分桶位数与目标误报；
+- 在 `experiments.py` 中，`run_experiment(N, b_bits, fpr, q_pos, q_neg)` 可修改数据规模与查询数量。
+
+示例输出（节选）：
+
+```text
+query=b'password' -> leaked=True
+query=b'hello1234' -> leaked=False
+...
+
+TPR: 1.0
+FPR_obs: 0.01
+avg_query_time_sec: 0.0025...
+avg_bucket_bytes: 138
+```
 
 ## 实验设计
 
@@ -58,44 +73,33 @@
   - 分桶位数 b（桶数 2^b）。
   - 每桶 Bloom 位数 m 与哈希函数个数 k（程序根据桶内元素数自适应到近似最优 k= m/n·ln2）。
 
-实验结果将在完成运行后记录在本 README 的“实验结果”章节。
-
-## 理论分析要点
+### 理论分析要点
 
 - Hash-to-Group：使用 e = SHA-256(x) mod q，将 g^e 再平方确保落在阶 q 子群。这样可避免小子群攻击。
 - 去盲正确性：N = (H1(x)^r)^k = H1(x)^{rk}，Z = N^{r^{-1}} = H1(x)^k。
 - Bloom FPR 近似：p ≈ (1 - e^{-kn/m})^k；在给定 n 与目标 p 下，最优 k ≈ (m/n)·ln2，固定 k 后 m 可按目标 FPR 倒推。实现中 m 以 8 对齐的最小整数，使误报率在一个可接受范围，且每桶最小位数有下界用于小桶。
 - 隐私：客户端仅暴露桶前缀（b 比特容量信息泄露）与盲化元素；服务器无法直接得到 x。服务器返回的桶 Bloom 过滤器在语义上包含该桶所有条目的 PRF 值的哈希，客户端只学到自己的查询结果。
-
-## 实现细节与工程取舍
-
 - 群选择：选 1536-bit RFC 3526 安全素数群，教学实现便于在纯 Python 中编码与调试；如需更强安全性，可替换为 2048-bit 或椭圆曲线群。
 - 无 DLEQ 证明：本实现不包含同钥证明，假设服务器诚实使用统一的 k。可作为后续扩展。
 - 分桶策略：prefix = SHA-256(x) 的前 b 位，b 可配置，默认 b=12（4096 桶）。
 - 序列化：Bloom 使用自定义头部（m_bits, k, n_items）与位图字节数组，便于跨进程传输。
 
-## 使用方法
+### 实验结果
 
-- 运行 demo：见下方“如何运行”。
-- 运行实验：见 `experiments.py`，会打印指标并输出到 README（执行后再更新本节）。
-
-## 实验结果（运行后填写）
-
-一次在本机的示例运行（N=8000, b=12, 目标FPR≈1e-4，查询各300条）得到：
+一次本机示例（N=8000, b=12, 目标 FPR≈1e-4，查询各 300 条）：
 - TPR: 1.0
-- FPR_obs: 0.01（受小桶/参数整型取整影响，略大于目标；可通过增大 m_bits 降低）
+- FPR_obs: 0.01（小桶触达最小位宽时偏高；可增大 m_bits 或 b）
 - 平均单次查询耗时（秒）: ≈0.0025
 - 平均返回桶大小（字节）: ≈138
 
-注：Bloom 的位数按桶内元素自适应，极小桶会触达最小位宽下界，导致观测 FPR 偏高。可调高 `min_m_bits` 或增大 b 减小每桶负载方差。
+注：极小桶的 Bloom 会受最小位宽影响，建议调高 `min_m_bits` 或增大 b 降低 FPR 方差。
 
-## 如何运行
+### 限制与扩展
 
-见项目根目录下的命令示例或直接运行：
-- `python3 project6/run_demo.py`
-- `python3 project6/experiments.py`
-
-（如系统非默认 Python3，请显式指定 python3 路径。）
+- 群为 1536-bit safe prime，教学实现；可替换为 2048-bit 或曲线型群。
+- 未加入 DLEQ 同钥证明；可扩展为标准化 OPRF/VOPRF。
+- 可扩展为跨进程/网络交互（目前为同进程示范）。
 
 ## 参考
-- OPRF/PSM 思路可参见业界公开资料与相关论文，密码学背景参考教材中对 DH、Hash 到群、Bloom 过滤器的分析。
+
+- DH、Hash-to-Group 与 Bloom 的标准教材与公开资料。
