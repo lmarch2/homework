@@ -7,6 +7,7 @@
 2. 基于SM3的长度扩展攻击验证
 3. 基于RFC6962标准的Merkle树构建与证明生成
 
+
 ## SM3算法数学原理
 
 ### 1. SM3算法结构
@@ -246,6 +247,68 @@ hash(left) < hash(q) < hash(right)
 ```
 且`left`和`right`都能提供有效的存在性证明，则`q`不存在于树中。
 
+
+## 项目结构
+
+```
+project4/
+├── README.md              # 项目文档和报告
+├── Makefile              # 构建配置
+├── src/                  # 源代码目录
+│   ├── sm3.h            # SM3算法头文件
+│   ├── sm3_basic.c      # SM3基础实现
+│   ├── sm3_optimized.c  # SM3优化实现
+│   ├── length_extension.c # 长度扩展攻击
+│   ├── merkle_tree.c    # Merkle树实现
+│   └── merkle.h         # Merkle树头文件
+├── tests/               # 测试程序目录
+│   ├── test_sm3.c       # SM3测试程序
+│   ├── test_length_ext.c # 长度扩展测试
+│   ├── test_merkle.c    # Merkle树测试
+│   ├── project_demo.c   # 完整功能演示
+│   └── ...              # 其他调试测试文件
+├── bin/                 # 二进制文件目录
+│   ├── project_demo     # 主要演示程序
+│   ├── test_sm3         # 各种测试程序
+│   └── ...              
+└── benchmark/           # 性能测试目录
+    └── performance_test.c # 性能基准测试
+```
+
+## 快速运行
+
+### 完整功能演示
+```bash
+cd project4/
+make demo  # 或者: gcc -o bin/project_demo tests/project_demo.c src/sm3_basic.c -lm -O2
+./bin/project_demo
+```
+
+### 功能测试
+```bash
+# SM3算法测试
+make test_sm3
+./bin/test_sm3
+
+# 长度扩展攻击测试  
+make test_length
+./bin/test_length
+
+# Merkle树测试
+make test_merkle
+./bin/test_merkle
+
+# 不存在性证明测试
+gcc -o bin/test_non_existence tests/test_non_existence.c src/sm3_basic.c src/merkle_tree.c -O2
+./bin/test_non_existence
+```
+
+### 性能测试
+```bash
+make benchmark
+./bin/performance_test
+```
+
 ## 实验设计
 
 ### 1. SM3性能测试
@@ -438,65 +501,4 @@ HMAC防护测试:
 
 ### 任务C: 大规模Merkle树实现
 - `src/merkle_tree.c` 支持100,000个叶节点，符合RFC6962标准。构建时间0.040秒，约250万叶子/秒
-
-## 项目结构
-
-```
-project4/
-├── README.md              # 项目文档和报告
-├── Makefile              # 构建配置
-├── src/                  # 源代码目录
-│   ├── sm3.h            # SM3算法头文件
-│   ├── sm3_basic.c      # SM3基础实现
-│   ├── sm3_optimized.c  # SM3优化实现
-│   ├── length_extension.c # 长度扩展攻击
-│   ├── merkle_tree.c    # Merkle树实现
-│   └── merkle.h         # Merkle树头文件
-├── tests/               # 测试程序目录
-│   ├── test_sm3.c       # SM3测试程序
-│   ├── test_length_ext.c # 长度扩展测试
-│   ├── test_merkle.c    # Merkle树测试
-│   ├── project_demo.c   # 完整功能演示
-│   └── ...              # 其他调试测试文件
-├── bin/                 # 二进制文件目录
-│   ├── project_demo     # 主要演示程序
-│   ├── test_sm3         # 各种测试程序
-│   └── ...              
-└── benchmark/           # 性能测试目录
-    └── performance_test.c # 性能基准测试
-```
-
-## 快速运行
-
-### 完整功能演示
-```bash
-cd project4/
-make demo  # 或者: gcc -o bin/project_demo tests/project_demo.c src/sm3_basic.c -lm -O2
-./bin/project_demo
-```
-
-### 功能测试
-```bash
-# SM3算法测试
-make test_sm3
-./bin/test_sm3
-
-# 长度扩展攻击测试  
-make test_length
-./bin/test_length
-
-# Merkle树测试
-make test_merkle
-./bin/test_merkle
-
-# 不存在性证明测试
-gcc -o bin/test_non_existence tests/test_non_existence.c src/sm3_basic.c src/merkle_tree.c -O2
-./bin/test_non_existence
-```
-
-### 性能测试
-```bash
-make benchmark
-./bin/performance_test
-```
 

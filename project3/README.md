@@ -302,9 +302,7 @@ snarkjs groth16 prove build/poseidon2_hash_final.zkey build/witness.wtns build/p
 snarkjs groth16 verify build/verification_key.json build/public.json build/proof.json
 ```
 
-### 实现验证
-
-实现成功演示了：
+成功实现了：
 
 1. **功能正确性**：所有哈希计算产生预期结果
 2. **电路约束**：所有测试中零约束违规
@@ -323,20 +321,11 @@ snarkjs groth16 verify build/verification_key.json build/public.json build/proof
 
 本项目成功实现了基于Circom的Poseidon2哈希算法电路，并集成了Groth16零知识证明系统。
 
-### 主要成果
-
 1. **算法安全性**：实现了256比特安全级别，满足现代密码学要求
 2. **电路效率**：总共860个约束，在可接受范围内
 3. **证明性能**：平均生成时间838ms，验证时间717ms
 4. **证明大小**：约800字节，实现了简洁性目标
 5. **可靠性**：所有测试用例100%通过验证
-
-### 技术特点
-
-1. **性能稳定性**：6个测试用例的性能变化小于10%，表现稳定
-2. **可扩展性**：电路设计支持不同参数配置
-3. **兼容性**：与现有ZK生态系统完全兼容
-4. **易用性**：提供完整的API和工具链
 
 ### 项目结构总览
 

@@ -9,7 +9,7 @@
 - 额外讨论：实现优化思路与边界检查。
 
 ## 目录结构
-
+```
 project5/
 ├── README.md
 ├── experiments/
@@ -24,7 +24,7 @@ project5/
 │   └── util.py
 └── tests/
   └── test_sm2_basic.py
-
+```
 ## 数学背景与推导
 
 设 SM2 曲线参数为 (p, a, b, G, n, h)，其中 h=1。用户私钥 d∈[1, n−1]，公钥 P=dG。
