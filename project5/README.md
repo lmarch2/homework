@@ -10,20 +10,20 @@
 
 ## 目录结构
 
-sm2/
+project5/
 ├── README.md
-├── experiments
+├── experiments/
 │   ├── demo_k_mode_compare.py
 │   ├── demo_omit_ZA.py
 │   └── demo_reuse_k.py
 ├── run_all.py
-├── sm2
+├── sm2/
 │   ├── curve.py
 │   ├── sm2.py
 │   ├── sm3.py
 │   └── util.py
-└── tests
-    └── test_sm2_basic.py
+└── tests/
+  └── test_sm2_basic.py
 
 ## 数学背景与推导
 
@@ -123,3 +123,4 @@ python3 project5/experiments/demo_k_mode_compare.py
 - IETF Internet-Draft: SM2 Digital Signature Algorithm (工作草案，包含 ZA 与签名/验签流程的英文描述)
   - https://datatracker.ietf.org/doc/html/draft-shen-sm2-ecdsa-02
 - docs/20250713-wen-sm2-public_00.png
+- docs/20250713-wen-sm2-public.pdf

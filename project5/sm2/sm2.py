@@ -87,6 +87,8 @@ def sm2_verify(msg: bytes, ID: bytes, Px: int, Py: int, sig: Tuple[int, int]) ->
     SG = scalar_mul(s, G)
     tP = scalar_mul(t, Point(Px, Py))
     X1Y1 = point_add(SG, tP)
+    if X1Y1.is_infinity:
+        return False
     R = (e + X1Y1.x) % n
     return R == r
 
@@ -131,5 +133,7 @@ def sm2_verify_without_ZA(msg: bytes, Px: int, Py: int, sig: Tuple[int, int]) ->
     SG = scalar_mul(s, G)
     tP = scalar_mul(t, Point(Px, Py))
     X1Y1 = point_add(SG, tP)
+    if X1Y1.is_infinity:
+        return False
     R = (e + X1Y1.x) % n
     return R == r
