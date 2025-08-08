@@ -17,6 +17,9 @@ IV = [
 
 
 def _rotl(x: int, n: int) -> int:
+    n %= 32
+    if n == 0:
+        return x & 0xFFFFFFFF
     return ((x << n) | (x >> (32 - n))) & 0xFFFFFFFF
 
 
