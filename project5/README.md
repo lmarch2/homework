@@ -1,30 +1,29 @@
 # Project 5: SM2 软件实现与优化实验报告
 
 本项目基于 Python 实现 SM2 椭圆曲线公钥密码算法的签名/验签，并围绕常见“签名算法的误用”开展可复现实验与 PoC。项目内容包括：
-- SM3 哈希算法（纯 Python 实现）。
-- SM2 曲线与标量运算、密钥生成、签名、验签（纯 Python 实现）。
+- SM3 哈希算法。
+- SM2 曲线与标量运算、密钥生成、签名、验签。
 - 实验与 PoC：
   1) 重复使用随机数 k 导致私钥泄露与伪造签名；
   2) 省略 ZA（身份绑定）导致身份混淆/验证行为异常；
 - 额外讨论：实现优化思路与边界检查。
 
-说明：
-- 代码与实验仅用于课程与安全研究；PoC 在“自有密钥/模拟身份”环境中进行，不针对任何现实对象。
-- 所有实现独立完成，避免抄袭，推导与实现均给出关键步骤。
-
 ## 目录结构
 
-- sm2/
-  - sm3.py：SM3 哈希实现
-  - curve.py：有限域与椭圆曲线点运算
-  - sm2.py：SM2 密钥生成、签名、验签、辅助函数
-  - util.py：字节与整数编解码、随机数等
-- experiments/
-  - demo_reuse_k.py：重复 k 的私钥恢复与“伪造签名”PoC
-  - demo_omit_ZA.py：省略 ZA 的对比验证实验
-- tests/
-  - test_sm2_basic.py：基本正确性测试
-- run_all.py：一键运行全部实验并输出结果
+sm2/
+├── README.md
+├── experiments
+│   ├── demo_k_mode_compare.py
+│   ├── demo_omit_ZA.py
+│   └── demo_reuse_k.py
+├── run_all.py
+├── sm2
+│   ├── curve.py
+│   ├── sm2.py
+│   ├── sm3.py
+│   └── util.py
+└── tests
+    └── test_sm2_basic.py
 
 ## 数学背景与推导
 
@@ -81,9 +80,7 @@ SM2 规定 e = SM3(ZA || M)，其中 ZA 与用户身份 ID 强绑定。若错误
 
 运行方式见文末。
 
-## 结果与分析（将由 run_all.py 自动生成输出，人工补充结论）
-
-一次实际运行（Linux, Python 3.10，单线程纯 Python）摘要：
+## 结果与分析
 
 - 基础正确性与性能：
   - 用例通过；签名 50 条约 2.14 s，验证约 5.29 s（纯 Python，仿射坐标）。
@@ -125,3 +122,4 @@ python3 project5/experiments/demo_k_mode_compare.py
   - https://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
 - IETF Internet-Draft: SM2 Digital Signature Algorithm (工作草案，包含 ZA 与签名/验签流程的英文描述)
   - https://datatracker.ietf.org/doc/html/draft-shen-sm2-ecdsa-02
+- docs/20250713-wen-sm2-public_00.png
