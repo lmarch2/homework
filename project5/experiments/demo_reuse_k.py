@@ -1,7 +1,13 @@
 from __future__ import annotations
 
-from project5.sm2.sm2 import keygen, sm2_sign, sm2_verify
-from project5.sm2.curve import CURVE
+import os
+import sys
+
+# allow running through project5/run_all.py
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+from sm2.sm2 import keygen, sm2_sign, sm2_verify
+from sm2.curve import CURVE
 
 # Reuse-k attack PoC: recover d from two signatures that used the same k
 
@@ -36,7 +42,7 @@ def main():
     print("recovered d:", hex(d_rec))
 
     # demonstrate forging a signature for Satoshi message by using the recovered d as our real key
-    from project5.sm2.sm2 import KeyPair
+    from sm2.sm2 import KeyPair
     forged_kp = KeyPair(d_rec, kp.Px, kp.Py)  # public matches when d matches
     satoshi_msg = "我是中本聪".encode("utf-8")
     sig = sm2_sign(satoshi_msg, ID, forged_kp)  # normal sign with recovered key

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from project5.sm2.sm2 import keygen, sm2_sign, sm2_verify
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+from sm2.sm2 import keygen, sm2_sign, sm2_verify
 
 
 def test_sm2_sign_verify_roundtrip():

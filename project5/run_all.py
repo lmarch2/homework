@@ -1,10 +1,15 @@
 from __future__ import annotations
 
 import time
+import os
+import sys
 
-from project5.sm2.sm2 import keygen, sm2_sign, sm2_verify
-from project5.experiments.demo_reuse_k import main as demo_reuse_k
-from project5.experiments.demo_omit_ZA import main as demo_omit_ZA
+# allow running as: python3 project5/run_all.py
+sys.path.append(os.path.dirname(__file__))
+
+from sm2.sm2 import keygen, sm2_sign, sm2_verify
+from experiments.demo_reuse_k import main as demo_reuse_k
+from experiments.demo_omit_ZA import main as demo_omit_ZA
 
 
 def basic_correctness_and_perf():

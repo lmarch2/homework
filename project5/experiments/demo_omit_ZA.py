@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from project5.sm2.sm2 import keygen, sm2_sign, sm2_verify, sm2_sign_without_ZA, sm2_verify_without_ZA
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+from sm2.sm2 import keygen, sm2_sign, sm2_verify, sm2_sign_without_ZA, sm2_verify_without_ZA
 
 
 def main():
