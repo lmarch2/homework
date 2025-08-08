@@ -4,9 +4,14 @@ import random
 import string
 import statistics
 import time
+import sys
 from typing import List, Tuple
 
-from project6.src.protocol import Protocol
+CUR = os.path.dirname(os.path.abspath(__file__))
+if CUR not in sys.path:
+    sys.path.insert(0, CUR)
+
+from src.protocol import Protocol
 
 
 def rand_pw(n: int) -> bytes:

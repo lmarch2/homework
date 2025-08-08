@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 import random
+import os
+import sys
 
-from project6.src.protocol import Protocol
+# allow running as script
+CUR = os.path.dirname(os.path.abspath(__file__))
+if CUR not in sys.path:
+    sys.path.insert(0, CUR)
+
+from src.protocol import Protocol
 
 COMMON = [
     b"123456", b"password", b"qwerty", b"111111", b"abc123",
