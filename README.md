@@ -1,13 +1,13 @@
-# Homework 项目总览（总结性说明）
+# Homework 项目总览
 
 本仓库包含 6 个作业，聚焦于对称密码实现与优化、哈希电路构建、数字水印以及隐私协议原型等方向。本文档提供面向读者的总体性说明与项目要求汇总，不包含运行演示与环境配置细节。
 
-- Project 1: SM4 软件实现与优化（GCM）
-- Project 2: 基于数字水印的图片泄露检测
-- Project 3: 使用 Circom 实现 Poseidon2 哈希电路并用 Groth16 生成证明
-- Project 4: SM3 软件实现与优化、长度扩展攻击与 Merkle 树
-- Project 5: SM2 软件实现与优化、签名误用 PoC 与“伪造中本聪签名”练习
-- Project 6: Google Password Checkup（GPC）协议原型实现
+- [Project 1](./project1/README.md): SM4 软件实现与优化（GCM） 
+- [Project 2](./project2/README.md): 基于数字水印的图片泄露检测 
+- [Project 3](./project3/README.md): 使用 Circom 实现 Poseidon2 哈希电路并用 Groth16 生成证明 
+- [Project 4](./project4/README.md): SM3 软件实现与优化、长度扩展攻击与 Merkle 树 
+- [Project 5](./project5/README.md): SM2 软件实现与优化、签名误用 PoC 与“伪造中本聪签名”练习 
+- [Project 6](./project6/README.md): Google Password Checkup（GPC）协议原型实现 
 
 ## 目录结构
 
